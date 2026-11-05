@@ -1,0 +1,42 @@
+@model ec.edu.monster.web.modelo.CostosVista
+@{
+    ViewBag.Title = "Costos de mantenimiento";
+}
+<section class="panel">
+    <h1>Costos de mantenimiento</h1>
+    <p class="texto-suave">Consulte los costos y el interés proyectado de una cuenta.</p>
+    @using (Html.BeginForm("Consultar", "Costos", FormMethod.Post, new { @class = "formulario formulario-linea" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="campo">
+            <label for="cuenta">Cuenta</label>
+            <input id="cuenta" name="cuenta" type="text" value="@Model.Cuenta" />
+        </div>
+        <button type="submit" class="btn btn-primario">Consultar costos</button>
+    }
+</section>
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="error" role="alert">@Model.Error</div>
+}
+@if (Model.Consultado && string.IsNullOrEmpty(Model.Error))
+{
+    <section class="panel">
+        @if (Model.Datos == null)
+        {
+            <div class="vacio">Sin resultados</div>
+        }
+        else
+        {
+            <dl class="detalle">
+                <div><dt>Saldo actual</dt><dd>@Formato.Monto(Model.Datos.SaldoActual)</dd></div>
+                <div><dt>Costo de mantenimiento</dt><dd>@Formato.Monto(Model.Datos.CostoMantenimiento)</dd></div>
+                <div><dt>Costo por movimiento</dt><dd>@Formato.Monto(Model.Datos.CostoMovimiento)</dd></div>
+                <div><dt>Interés proyectado</dt><dd>@Formato.Monto(Model.Datos.InteresProyectado)</dd></div>
+                <div><dt>Límite de mantenimiento</dt><dd>@Formato.Monto(Model.Datos.LimiteMantenimiento)</dd></div>
+                <div><dt>Operaciones sin costo</dt><dd>@Model.Datos.OperacionesSinCosto</dd></div>
+            </dl>
+        }
+    </section>
+}

@@ -1,0 +1,46 @@
+@model ec.edu.monster.web.modelo.OperacionesVista
+@{
+    ViewBag.Title = "Operaciones";
+    var opciones = new[]
+    {
+        new { Valor = "deposito", Texto = "Depósito" },
+        new { Valor = "retiro", Texto = "Retiro" },
+        new { Valor = "transferencia", Texto = "Transferencia" }
+    };
+}
+<section class="panel">
+    <h1>Operaciones</h1>
+    <p class="texto-suave">Registre un depósito, un retiro o una transferencia entre cuentas.</p>
+
+    @if (!string.IsNullOrEmpty(Model.Mensaje))
+    {
+        <div class="@(Model.Exito ? "exito" : "error")" role="@(Model.Exito ? "status" : "alert")">@Model.Mensaje</div>
+    }
+
+    @using (Html.BeginForm("Ejecutar", "Operaciones", FormMethod.Post, new { @class = "formulario" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="campo">
+            <label for="operacion">Operación</label>
+            <select id="operacion" name="operacion">
+                @foreach (var opcion in opciones)
+                {
+                    <option value="@opcion.Valor" @(Model.Operacion == opcion.Valor ? Html.Raw("selected") : null)>@opcion.Texto</option>
+                }
+            </select>
+        </div>
+        <div class="campo">
+            <label for="cuenta">Cuenta</label>
+            <input id="cuenta" name="cuenta" type="text" value="@Model.Cuenta" />
+        </div>
+        <div class="campo">
+            <label for="cuentaDestino">Cuenta destino (solo transferencias)</label>
+            <input id="cuentaDestino" name="cuentaDestino" type="text" value="@Model.CuentaDestino" />
+        </div>
+        <div class="campo">
+            <label for="monto">Monto</label>
+            <input id="monto" name="monto" type="text" inputmode="decimal" value="@Model.Monto" />
+        </div>
+        <button type="submit" class="btn btn-primario btn-bloque">Ejecutar operación</button>
+    }
+</section>

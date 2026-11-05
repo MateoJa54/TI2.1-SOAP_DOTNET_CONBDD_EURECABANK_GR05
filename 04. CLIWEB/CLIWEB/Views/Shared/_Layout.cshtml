@@ -1,0 +1,48 @@
+@using ec.edu.monster.web.util
+@{
+    bool conectado = SesionWeb.HaySesion(Session);
+    var sesion = SesionWeb.Obtener(Session);
+    string seccion = Convert.ToString(ViewContext.RouteData.Values["controller"]);
+    string titulo = ViewBag.Title ?? "Cliente EURECABANK";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#133049" />
+    <title>@titulo · EURECABANK</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" />
+</head>
+<body class="@(conectado ? "con-sesion" : "sin-sesion")">
+    @if (conectado)
+    {
+        <header class="barra">
+            <div class="barra-marca">
+                <img src="@Url.Content("~/Content/img/marca.svg")" alt="Monster" width="36" height="36" />
+                <div>
+                    <div class="barra-titulo">EURECABANK</div>
+                    <div class="barra-sub">Cliente web</div>
+                </div>
+            </div>
+            <nav class="menu" aria-label="Principal">
+                <a href="@Url.Action("Index", "Cuentas")" class="@(seccion == "Cuentas" ? "activo" : null)">Cuentas</a>
+                <a href="@Url.Action("Index", "Movimientos")" class="@(seccion == "Movimientos" ? "activo" : null)">Movimientos</a>
+                <a href="@Url.Action("Index", "Operaciones")" class="@(seccion == "Operaciones" ? "activo" : null)">Operaciones</a>
+                <a href="@Url.Action("Index", "Costos")" class="@(seccion == "Costos" ? "activo" : null)">Costos</a>
+            </nav>
+            <div class="barra-usuario">
+                <span class="usuario" title="Empleado en sesión">@sesion.NombreEmpleado</span>
+                @using (Html.BeginForm("Logout", "Cuenta", FormMethod.Post, new { @class = "form-salir" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-secundario">Cerrar sesión</button>
+                }
+            </div>
+        </header>
+    }
+    <main class="contenedor">
+        @RenderBody()
+    </main>
+</body>
+</html>

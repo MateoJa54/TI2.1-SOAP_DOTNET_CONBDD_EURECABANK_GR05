@@ -1,0 +1,421 @@
+:root {
+    --fondo: #F3F7FB;
+    --superficie: #FFFFFF;
+    --entrada: #F7F9FC;
+    --borde: #E4EAF2;
+    --navy: #133049;
+    --texto: #1F3142;
+    --texto-suave: #54677A;
+    --primario: #2563EB;
+    --primario-oscuro: #1769E0;
+    --primario-suave: #E7EFFE;
+    --marca: #0F8591;
+    --error: #B8313A;
+    --error-suave: #FBEBEC;
+    --radio: 12px;
+    --radio-tarjeta: 16px;
+    --fuente: 'Segoe UI Variable Text', 'Segoe UI', Inter, 'Helvetica Neue', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: var(--fuente);
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+h1, h2 {
+    color: var(--navy);
+    margin: 0 0 6px;
+    line-height: 1.25;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+h2 {
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+a {
+    color: var(--primario);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--primario-oscuro);
+    text-decoration: underline;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.texto-suave {
+    color: var(--texto-suave);
+    margin: 0 0 16px;
+}
+
+/* Barra superior */
+.barra {
+    background: var(--superficie);
+    border-bottom: 1px solid var(--borde);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    padding: 12px 16px;
+}
+
+.barra-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.barra-titulo {
+    color: var(--navy);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.barra-sub {
+    color: var(--texto-suave);
+    font-size: 12px;
+}
+
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.menu a {
+    color: var(--texto-suave);
+    padding: 6px 10px;
+    border-radius: var(--radio);
+}
+
+.menu a:hover {
+    background: var(--primario-suave);
+    color: var(--primario-oscuro);
+    text-decoration: none;
+}
+
+.menu a.activo {
+    background: var(--primario-suave);
+    color: var(--primario-oscuro);
+    font-weight: 600;
+}
+
+.barra-usuario {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.usuario {
+    color: var(--texto-suave);
+}
+
+.form-salir {
+    margin: 0;
+}
+
+/* Contenido */
+.contenedor {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+}
+
+.panel {
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-tarjeta);
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.panel-centro {
+    max-width: 480px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+/* Acceso */
+.acceso {
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-tarjeta);
+    max-width: 380px;
+    margin: 32px auto;
+    padding: 28px 24px;
+    text-align: center;
+}
+
+.acceso-marca {
+    display: block;
+    margin: 0 auto 12px;
+}
+
+.acceso-recurso {
+    display: block;
+    margin: 24px auto 0;
+    max-width: 180px;
+}
+
+.acceso .formulario {
+    text-align: left;
+}
+
+/* Formularios */
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.formulario-linea {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1 1 200px;
+}
+
+.campo label {
+    color: var(--navy);
+    font-weight: 600;
+}
+
+.campo input,
+.campo select {
+    background: var(--entrada);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    color: var(--texto);
+    font: inherit;
+    padding: 9px 12px;
+    width: 100%;
+}
+
+.campo input:focus,
+.campo select:focus {
+    outline: 2px solid var(--primario-suave);
+    border-color: var(--primario);
+}
+
+.en-linea {
+    margin: 0;
+}
+
+/* Botones */
+.btn {
+    display: inline-block;
+    border: 1px solid transparent;
+    border-radius: var(--radio);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+    padding: 9px 16px;
+    text-align: center;
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--primario);
+    outline-offset: 2px;
+}
+
+.btn-primario {
+    background: var(--primario);
+    color: #FFFFFF;
+}
+
+.btn-primario:hover {
+    background: var(--primario-oscuro);
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.btn-secundario {
+    background: var(--superficie);
+    border-color: var(--borde);
+    color: var(--navy);
+}
+
+.btn-secundario:hover {
+    background: var(--primario-suave);
+    color: var(--primario-oscuro);
+    text-decoration: none;
+}
+
+.btn-bloque {
+    width: 100%;
+}
+
+.btn-pequeno {
+    padding: 5px 10px;
+}
+
+/* Mensajes */
+.error,
+.exito,
+.aviso {
+    border-radius: var(--radio);
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.error {
+    background: var(--error-suave);
+    color: var(--error);
+    border: 1px solid var(--error);
+}
+
+.exito {
+    background: var(--primario-suave);
+    color: var(--primario-oscuro);
+    border: 1px solid var(--primario);
+}
+
+.aviso {
+    background: var(--primario-suave);
+    color: var(--navy);
+    border: 1px solid var(--borde);
+}
+
+.vacio {
+    color: var(--texto-suave);
+    padding: 24px;
+    text-align: center;
+    background: var(--entrada);
+    border: 1px dashed var(--borde);
+    border-radius: var(--radio);
+}
+
+/* Tablas y detalle */
+.tabla-envoltorio {
+    overflow-x: auto;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla th,
+.tabla td {
+    border-bottom: 1px solid var(--borde);
+    padding: 10px 8px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.tabla th {
+    color: var(--texto-suave);
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.num {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.detalle {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 0;
+}
+
+.detalle div {
+    background: var(--entrada);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 10px 12px;
+}
+
+.detalle dt {
+    color: var(--texto-suave);
+    font-size: 12px;
+}
+
+.detalle dd {
+    margin: 2px 0 0;
+    color: var(--navy);
+    font-weight: 600;
+}
+
+.acciones {
+    margin: 16px 0 0;
+}
+
+/* Movil */
+@media (max-width: 640px) {
+    .barra {
+        padding: 12px;
+    }
+
+    .barra-usuario {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .formulario-linea {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .contenedor {
+        padding: 16px;
+    }
+
+    .panel {
+        padding: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* En un formulario en columna el campo no debe heredar la base de 200px como alto */
+.formulario:not(.formulario-linea) .campo {
+    flex: 0 0 auto;
+}

@@ -1,0 +1,33 @@
+@model ec.edu.monster.web.modelo.ConsultaCuentaVista
+@{
+    ViewBag.Title = "Consulta de cuenta";
+}
+<section class="panel">
+    <h1>Consulta de cuenta</h1>
+
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="error" role="alert">@Model.Error</div>
+    }
+    else if (Model.Detalle == null)
+    {
+        <div class="vacio">Sin resultados</div>
+    }
+    else
+    {
+        <dl class="detalle">
+            <div><dt>Cuenta</dt><dd>@Model.Detalle.Codigo</dd></div>
+            <div><dt>Titular</dt><dd>@Model.Detalle.NombreCliente</dd></div>
+            <div><dt>Moneda</dt><dd>@Model.Detalle.Moneda</dd></div>
+            <div><dt>Saldo</dt><dd>@Model.Detalle.Saldo</dd></div>
+            <div><dt>Estado</dt><dd>@Model.Detalle.Estado</dd></div>
+            <div><dt>Sucursal</dt><dd>@Model.Detalle.CodigoSucursal</dd></div>
+            <div><dt>Fecha de creación</dt><dd>@Model.Detalle.FechaCreacion</dd></div>
+            <div><dt>Operaciones realizadas</dt><dd>@Model.Detalle.OperacionesRealizadas</dd></div>
+        </dl>
+    }
+
+    <p class="acciones">
+        <a class="btn btn-secundario" href="@Url.Action("Index", "Cuentas")">Volver a cuentas</a>
+    </p>
+</section>

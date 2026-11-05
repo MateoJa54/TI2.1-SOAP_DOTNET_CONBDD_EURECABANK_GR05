@@ -1,0 +1,59 @@
+@model ec.edu.monster.web.modelo.MovimientosVista
+@{
+    ViewBag.Title = "Movimientos";
+}
+<section class="panel">
+    <h1>Movimientos de una cuenta</h1>
+    <p class="texto-suave">Indique el número de cuenta para ver sus movimientos.</p>
+    @using (Html.BeginForm("Consultar", "Movimientos", FormMethod.Post, new { @class = "formulario formulario-linea" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="campo">
+            <label for="cuenta">Cuenta</label>
+            <input id="cuenta" name="cuenta" type="text" value="@Model.Cuenta" />
+        </div>
+        <button type="submit" class="btn btn-primario">Consultar movimientos</button>
+    }
+</section>
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="error" role="alert">@Model.Error</div>
+}
+@if (Model.Consultado && string.IsNullOrEmpty(Model.Error))
+{
+    <section class="panel">
+        @if (Model.Filas.Count == 0)
+        {
+            <div class="vacio">Sin resultados</div>
+        }
+        else
+        {
+            <div class="tabla-envoltorio">
+                <table class="tabla">
+                    <thead>
+                        <tr>
+                            <th scope="col">Número</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Acción</th>
+                            <th scope="col" class="num">Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var fila in Model.Filas)
+                        {
+                            <tr>
+                                <td>@fila.Numero</td>
+                                <td>@fila.Fecha</td>
+                                <td>@fila.Tipo</td>
+                                <td>@fila.Accion</td>
+                                <td class="num">@fila.Importe</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+}

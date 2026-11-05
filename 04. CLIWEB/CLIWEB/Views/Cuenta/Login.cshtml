@@ -1,0 +1,34 @@
+@model ec.edu.monster.web.modelo.LoginVista
+@{
+    ViewBag.Title = "Acceso";
+}
+<section class="acceso">
+    <img class="acceso-marca" src="@Url.Content("~/Content/img/marca.svg")" alt="Monster" width="64" height="64" />
+    <h1>Acceso al cliente web</h1>
+    <p class="texto-suave">Ingrese con sus credenciales de empleado.</p>
+
+    @if (!string.IsNullOrEmpty(Model.Aviso))
+    {
+        <div class="aviso" role="status">@Model.Aviso</div>
+    }
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="error" role="alert">@Model.Error</div>
+    }
+
+    @using (Html.BeginForm("Login", "Cuenta", FormMethod.Post, new { @class = "formulario" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="campo">
+            <label for="usuario">Usuario</label>
+            <input id="usuario" name="usuario" type="text" value="@Model.Usuario" autocomplete="username" />
+        </div>
+        <div class="campo">
+            <label for="clave">Clave</label>
+            <input id="clave" name="clave" type="password" autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn-primario btn-bloque">Ingresar</button>
+    }
+
+    <img class="acceso-recurso" src="@Url.Content("~/Content/img/Monster.png")" alt="Monster" />
+</section>

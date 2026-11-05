@@ -1,0 +1,67 @@
+@model ec.edu.monster.web.modelo.CuentasVista
+@{
+    ViewBag.Title = "Cuentas";
+}
+<section class="panel">
+    <h1>Cuentas por cliente</h1>
+    <p class="texto-suave">Busque las cuentas de un cliente por su cédula.</p>
+    @using (Html.BeginForm("Listar", "Cuentas", FormMethod.Post, new { @class = "formulario formulario-linea" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="campo">
+            <label for="cedula">Cédula</label>
+            <input id="cedula" name="cedula" type="text" inputmode="numeric" value="@Model.Cedula" />
+        </div>
+        <button type="submit" class="btn btn-primario">Buscar cuentas</button>
+    }
+</section>
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="error" role="alert">@Model.Error</div>
+}
+@if (Model.Consultado && string.IsNullOrEmpty(Model.Error))
+{
+    <section class="panel">
+        <h2>@(string.IsNullOrEmpty(Model.NombreCliente) ? "Cuentas del cliente" : Model.NombreCliente)</h2>
+        @if (Model.Cuentas.Count == 0)
+        {
+            <div class="vacio">Sin resultados</div>
+        }
+        else
+        {
+            <div class="tabla-envoltorio">
+                <table class="tabla">
+                    <thead>
+                        <tr>
+                            <th scope="col">Cuenta</th>
+                            <th scope="col">Moneda</th>
+                            <th scope="col" class="num">Saldo</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col"><span class="sr">Acción</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cuenta in Model.Cuentas)
+                        {
+                            <tr>
+                                <td>@cuenta.Codigo</td>
+                                <td>@cuenta.Moneda</td>
+                                <td class="num">@cuenta.Saldo</td>
+                                <td>@cuenta.Estado</td>
+                                <td>
+                                    @using (Html.BeginForm("Consultar", "Cuentas", FormMethod.Post, new { @class = "en-linea" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="cuenta" value="@cuenta.Codigo" />
+                                        <button type="submit" class="btn btn-secundario btn-pequeno">Ver</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+}
