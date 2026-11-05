@@ -21,7 +21,7 @@
 | URL del WSDL publicado | `http://localhost:50775/WSEUREKABANK.svc?singleWsdl` |
 | Token de sesión | último parámetro de cada operación (decisión del grupo; no va en el encabezado SOAP) |
 | Archivos del contrato | `04. SERVIDOR/contrato/WSEUREKABANK.wsdl` y `04. SERVIDOR/contrato/WSEUREKABANK_schema.xsd` |
-| Base de datos | MySQL 8.4, esquema `eurekabank` |
+| Base de datos | SQL Server (MSSQLSERVER), base `eurekabank`, autenticación de Windows |
 
 ---
 
@@ -326,7 +326,7 @@ Convención: el **token va siempre al último parámetro**, salvo en `autenticar
 | Cliente de Software Escritorio | `ACT-003` | sistema | `04. CLIESC/` — responsabilidad del compañero 1 |
 | Cliente de Software Web | `ACT-004` | sistema | `04. CLIWEB/` — responsabilidad del compañero 2 |
 | Cliente de Software Móvil | `ACT-005` | sistema | `04. CLIMOV/` — responsabilidad del compañero 3 |
-| Base de Datos EUREKABANK | `ACT-006` | sistema externo | MySQL 8.4 con el esquema `eurekabank` (17 tablas) |
+| Base de Datos EUREKABANK | `ACT-006` | sistema externo | SQL Server con la base `eurekabank` (17 tablas) |
 | Proceso Batch de Mantenimiento | `ACT-007` | sistema externo | Proceso que cobra mantenimiento y abona interés (fuera de alcance, ver RB-12) |
 
 ---
@@ -352,7 +352,7 @@ ec.edu.monster
 │   │   RespuestaMovimientos, RespuestaMovimiento, RespuestaTransferencia, RespuestaCostos
 │   ├── CuentaDTO, MovimientoDTO
 │   └── CodigoRespuesta               ← los 17 códigos de §5
-├── datos                             ← ADO.NET con MySqlConnector, consultas parametrizadas
+├── datos                             ← ADO.NET con System.Data.SqlClient, consultas parametrizadas
 │   ├── ProveedorConexion, IUnidadTrabajo / UnidadTrabajoMySql, ContextoTransaccional
 │   └── ClienteDAO, CuentaDAO, MovimientoDAO, UsuarioDAO, ParametroDAO,
 │       TipoMovimientoDAO, MonedaDAO, CostoDAO, LogSessionDAO (+ interfaces I*DAO)
@@ -375,11 +375,10 @@ Cada valor se lee primero de la variable de entorno y, si no existe, de `appSett
 
 | Variable | Defecto | Uso |
 |---|---|---|
-| `EUREKABANK_DB_SERVIDOR` | `127.0.0.1` | Servidor MySQL |
-| `EUREKABANK_DB_PUERTO` | `3306` | Puerto MySQL |
-| `EUREKABANK_DB_ESQUEMA` | `eurekabank` | Esquema (las pruebas usan `eurekabank_prueba`) |
-| `EUREKABANK_DB_USUARIO` | `eurekabank_app` | Usuario de aplicación |
-| `EUREKABANK_DB_CLAVE` | `EurekaBank2026!` | Clave de aplicación (credencial de laboratorio) |
+| `EUREKABANK_DB_SERVIDOR` | `localhost` | Instancia de SQL Server (MSSQLSERVER) |
+| `EUREKABANK_DB_ESQUEMA` | `eurekabank` | Base de datos (las pruebas usan `eurekabank_prueba`) |
+
+La conexión usa autenticación de Windows: no hay usuario ni clave en la configuración.
 | `EUREKABANK_TOKEN_MINUTOS` | `30` | TTL del token de sesión |
 
 El filtro CORS de la versión Java no existe en .NET: ningún cliente es un navegador que llame directamente al servicio.
@@ -438,8 +437,8 @@ egenerar-proxy.ps1` (svcutil, serializador XmlSerializer) desde el WSDL **local*
 | Actividad | `02_ACTIVIDAD/`: **12 `.oom`** = `DA_00_Sistema_General.oom` + `DA_01_Autenticarse.oom` … `DA_11_ErroresNegocio.oom`. |
 | Secuencia | `03_SECUENCIA/`: **12 `.oom`** = `DS_01_Autenticarse.oom` … `DS_11_ErrorNegocio.oom` + `DS_12_Sistema_General.oom`. Un modelo por CU con el flujo principal; los CU 02, 09, 10 y 11 muestran el flujo de error. |
 | Clases | `04_CLASES/`: **4 `.oom`** = `DC_Servidor.oom`, `DC_Cliente_Consola.oom`, `DC_Cliente_Escritorio.oom` y `DC_Cliente_Web.oom`. Deben ser **verificables contra el código real**: los nombres de clase, atributos y métodos se toman del código C# implementado, no inventados. |
-| Arquitectura | `05_ARQUITECTURA/`: **1 `.eam`** = `DA_EUREKABANK_SOAP_DOTNET.eam`: 3 áreas (Consumidores / Servicios con IIS Express y WCF / Datos con MySQL), 3 aplicaciones cliente (consola, escritorio, web), enlace SOAP y enlace ADO.NET. |
-| MER | `02. MER/02. LOGICO/ML_EUREKABANK.ldm` (17 entidades con atributos, PK, FK y cardinalidades) + `02. MER/03. FISICO/MF_EUREKABANK.pdm` (17 tablas con tipos MySQL 8.4, PK, FK, índices y CHECK). El conceptual va en `02. MER/01. CONCEPTUAL/`. |
+| Arquitectura | `05_ARQUITECTURA/`: **1 `.eam`** = `DA_EUREKABANK_SOAP_DOTNET.eam`: 3 áreas (Consumidores / Servicios con IIS Express y WCF / Datos con SQL Server), 3 aplicaciones cliente (consola, escritorio, web), enlace SOAP y enlace ADO.NET. |
+| MER | `02. MER/02. LOGICO/ML_EUREKABANK.ldm` (17 entidades con atributos, PK, FK y cardinalidades) + `02. MER/03. FISICO/MF_EUREKABANK.pdm` (17 tablas con tipos SQL Server, PK, FK, índices y CHECK). El conceptual va en `02. MER/01. CONCEPTUAL/`. |
 | Rutas | Todos los `.prj` y el `.sws` con **rutas relativas**. Cero rutas absolutas. Nombre del workspace: `SOAP_DOTNET_CONBDD_GR05.sws` en la raíz del proyecto. |
 | Figuras | Cada modelo se exporta a imagen desde PowerDesigner y se incrusta en el ERS, el ECUD y el manual con su pie numerado. |
 | Archivos por carpeta | Cada familia de diagramas lleva su `<FAMILIA>.prj` y `<FAMILIA>.pjb` (proyecto PowerDesigner) al que se registran sus modelos. |
@@ -498,10 +497,10 @@ Reglas de la plantilla:
 
 | Recurso | Valor |
 |---|---|
-| MySQL 8.4 | `127.0.0.1:3306` (servicio de Windows `MySQL84`) |
+| SQL Server | `localhost`, instancia MSSQLSERVER (servicio de Windows) |
 | Esquema real | `eurekabank` (datos de la práctica; las pruebas que escriben NO se ejecutan aquí) |
-| Esquema de pruebas | `eurekabank_prueba`, creado con `03. BDD\crear_bdd_prueba.ps1` (copia de los cinco scripts con el nombre cambiado) |
-| Conector | MySqlConnector 2.5.0 (NuGet) |
+| Esquema de pruebas | `eurekabank_prueba`, creado con `03. BDD\SQLSERVER\cargar_bdd_sqlserver.ps1 -Esquema eurekabank_prueba -Recrear` |
+| Acceso a datos | System.Data.SqlClient (incluido en .NET Framework 4.8) |
 | Compilación | MSBuild de Visual Studio, .NET Framework 4.8, `-restore` |
 | Pruebas | MSTest 3.6.4, ejecutadas con `dotnet test` |
 | Servidor de pruebas | IIS Express en puerto libre (`04. SERVIDOR\scripts\probar-iisexpress.ps1`) |

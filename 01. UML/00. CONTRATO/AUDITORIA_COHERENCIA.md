@@ -20,7 +20,7 @@ Fecha de la revisión: 2026-11-04. Contrato de referencia: `CONTRATO_CONGELADO_E
 ## Cambios respecto del contrato de la versión Java
 
 1. Endpoint: `http://localhost:50775/WSEUREKABANK.svc` (IIS Express y WCF) en lugar de Payara.
-2. Estructura del servidor y de los clientes, configuración por variables `EUREKABANK_DB_SERVIDOR`, `EUREKABANK_DB_PUERTO` y `EUREKABANK_DB_ESQUEMA` en lugar de la URL JDBC. Se elimina `EUREKABANK_ORIGENES_CORS`.
+2. Estructura del servidor y de los clientes, configuración por variables `EUREKABANK_DB_SERVIDOR`, `EUREKABANK_DB_PUERTO` y `EUREKABANK_DB_ESQUEMA` en lugar de la URL JDBC. En la versión .NET la base es SQL Server (no MySQL) y no hay usuario ni clave de aplicación. Se elimina `EUREKABANK_ORIGENES_CORS`.
 3. RB-03 ampliada: el retiro exige `saldo >= monto + cargo por movimiento` y la transferencia `saldo >= monto + ITF + cargo por movimiento`, con `SAL-001` sin escribir. Un depósito cuyo cargo superaría `saldo + monto` también responde `SAL-001`; esta última extensión no existe en Java.
 4. Un fallo de base de datos responde `ERR-001`, igual que en Java; `SER-001` solo lo genera el cliente cuando no alcanza al servicio.
 
@@ -34,7 +34,7 @@ Fecha de la revisión: 2026-11-04. Contrato de referencia: `CONTRATO_CONGELADO_E
 6. **Diagramas de casos de uso, actividad y secuencia**: se copiaron de la versión Java. En actividad se sustituyó "Payara" por "IIS Express". No se ha verificado que ningún otro texto mencione tecnología de Java.
 7. **Manual técnico**: no se ha redactado.
 8. **Web**: el acceso no regenera el identificador de la sesión HTTP (riesgo de fijación de sesión, documentado en `04. CLIWEB\README.md`).
-9. **Dependencias**: MySqlConnector 2.5.0 muestra el aviso NU1902 (GHSA-473q-m89c-ghf8) y no se ha investigado.
+9. **Base de datos**: el servidor .NET usa SQL Server con los mismos 17 objetos y la misma semilla que la versión Java en MySQL; los datos cargados coinciden (6 cuentas, 74 movimientos).
 
 ## No verificado
 

@@ -13,7 +13,7 @@ Servicio SOAP 1.1 `document/literal wrapped` en `http://localhost:50775/WSEUREKA
 
 ## Configuración
 
-Cada valor se lee de la variable de entorno y, si no existe, de `appSettings` de `Web.config`: `EUREKABANK_DB_SERVIDOR`, `EUREKABANK_DB_PUERTO`, `EUREKABANK_DB_ESQUEMA`, `EUREKABANK_DB_USUARIO`, `EUREKABANK_DB_CLAVE` y `EUREKABANK_TOKEN_MINUTOS`. Los valores por defecto son los de laboratorio del contrato.
+Cada valor se lee de la variable de entorno y, si no existe, de `appSettings` de `Web.config`: `EUREKABANK_DB_SERVIDOR` (por defecto `localhost`), `EUREKABANK_DB_ESQUEMA` (por defecto `eurekabank`) y `EUREKABANK_TOKEN_MINUTOS`. La base usa autenticación de Windows, así que no hay usuario ni clave en la configuración.
 
 ## Cómo compilar y probar
 
@@ -23,7 +23,7 @@ powershell -ExecutionPolicy Bypass -File scripts\compilar-y-probar.ps1 -Integrac
 powershell -ExecutionPolicy Bypass -File scripts\probar-iisexpress.ps1
 ```
 
-Las pruebas de integración y el recorrido de `probar-iisexpress.ps1` escriben saldos y filas de `logsession`, por eso usan el esquema `eurekabank_prueba` (`03. BDD\crear_bdd_prueba.ps1`) y nunca `eurekabank`.
+Las pruebas de integración y el recorrido de `probar-iisexpress.ps1` escriben saldos y filas de `logsession`, por eso usan el esquema `eurekabank_prueba` (`03. BDD\SQLSERVER\cargar_bdd_sqlserver.ps1 -Esquema eurekabank_prueba -Recrear`) y nunca `eurekabank`.
 
 ## Decisiones de diseño
 
@@ -32,10 +32,10 @@ Las pruebas de integración y el recorrido de `probar-iisexpress.ps1` escriben s
 - **SOAPAction vacío**: `DespachoPorElementoCuerpo` elige la operación por el elemento raíz del cuerpo, como hace JAX-WS, para que el cliente Java funcione sin cambios.
 - **Contenedor `<return>`**: XmlSerializer no admite dos elementos `return` de tipos distintos en el mismo contrato, así que `Retorno` arma el cuerpo de `<return>` aparte. El esquema resultante se valida contra el XSD congelado en `FachadaTest`.
 - **Saldo**: retiro y transferencia validan `saldo >= monto + cargo (+ ITF)` y responden `SAL-001` sin escribir. Un depósito cuyo cargo por movimiento superaría `saldo + monto` también responde `SAL-001`.
-- **Concurrencia**: cada movimiento es una transacción con `SELECT ... FOR UPDATE`; en transferencias las dos cuentas se bloquean siempre en el mismo orden.
+- **Concurrencia**: cada movimiento es una transacción y la cuenta se lee con `WITH (UPDLOCK, ROWLOCK)`; en transferencias las dos cuentas se bloquean siempre en el mismo orden.
 - **Clave**: se compara en tiempo constante con una función propia, porque `CryptographicOperations.FixedTimeEquals` no existe en .NET Framework 4.8.
-- **Credenciales**: la clave por defecto de `eurekabank_app` es la de laboratorio del contrato y está en el código y en `Web.config`; en un despliegue real se sobrescribe con `EUREKABANK_DB_CLAVE`.
+- **Base de datos**: SQL Server con autenticación de Windows. El servidor no guarda claves; la cuenta de Windows que ejecuta IIS Express necesita acceso a la base.
 
 ## Pendiente conocido
 
-MySqlConnector 2.5.0 muestra el aviso NU1902 (vulnerabilidad moderada, GHSA-473q-m89c-ghf8); no se ha investigado su alcance.
+Sin pendientes conocidos. No se ha probado todavía el servidor desde otra PC.
