@@ -1,14 +1,15 @@
-using MySqlConnector;
+using System.Data.SqlClient;
 
 namespace ec.edu.monster.datos
 {
     public class LogSessionDAO : ILogSessionDAO
     {
         private const string Ingreso =
-            "INSERT INTO logsession (chr_emplcodigo, fec_ingreso, ip, hostname) VALUES (@empleado, NOW(), @ip, @host)";
+            "INSERT INTO logsession (chr_emplcodigo, fec_ingreso, ip, hostname) VALUES (@empleado, GETDATE(), @ip, @host); " +
+            "SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
         private const string Salida =
-            "UPDATE logsession SET fec_salida = NOW() WHERE ID = @id AND fec_salida IS NULL";
+            "UPDATE logsession SET fec_salida = GETDATE() WHERE ID = @id AND fec_salida IS NULL";
 
         private readonly ProveedorConexion proveedor;
 
@@ -19,14 +20,13 @@ namespace ec.edu.monster.datos
 
         public int? RegistrarIngreso(string empleado, string ip, string hostname)
         {
-            using (MySqlConnection conexion = proveedor.ObtenerConexion())
-            using (MySqlCommand insercion = new MySqlCommand(Ingreso, conexion))
+            using (SqlConnection conexion = proveedor.ObtenerConexion())
+            using (SqlCommand insercion = new SqlCommand(Ingreso, conexion))
             {
                 insercion.Parameters.AddWithValue("@empleado", empleado);
                 insercion.Parameters.AddWithValue("@ip", ip ?? "NONE");
                 insercion.Parameters.AddWithValue("@host", hostname ?? "NONE");
-                insercion.ExecuteNonQuery();
-                return (int)insercion.LastInsertedId;
+                return (int)insercion.ExecuteScalar();
             }
         }
 
@@ -36,8 +36,8 @@ namespace ec.edu.monster.datos
             {
                 return;
             }
-            using (MySqlConnection conexion = proveedor.ObtenerConexion())
-            using (MySqlCommand actualizacion = new MySqlCommand(Salida, conexion))
+            using (SqlConnection conexion = proveedor.ObtenerConexion())
+            using (SqlCommand actualizacion = new SqlCommand(Salida, conexion))
             {
                 actualizacion.Parameters.AddWithValue("@id", idSesion.Value);
                 actualizacion.ExecuteNonQuery();

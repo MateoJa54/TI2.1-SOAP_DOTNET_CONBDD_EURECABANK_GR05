@@ -1,63 +1,47 @@
 using System;
 using System.Configuration;
-using MySqlConnector;
+using System.Data.SqlClient;
 
 namespace ec.edu.monster.datos
 {
+    // SQL Server (MSSQLSERVER) con autenticación de Windows: el servidor no guarda ninguna clave.
     public class ProveedorConexion
     {
         public const string VariableServidor = "EUREKABANK_DB_SERVIDOR";
-        public const string VariablePuerto = "EUREKABANK_DB_PUERTO";
         public const string VariableEsquema = "EUREKABANK_DB_ESQUEMA";
-        public const string VariableUsuario = "EUREKABANK_DB_USUARIO";
-        public const string VariableClave = "EUREKABANK_DB_CLAVE";
 
-        public const string ServidorPorDefecto = "127.0.0.1";
-        public const string PuertoPorDefecto = "3306";
+        public const string ServidorPorDefecto = "localhost";
         public const string EsquemaPorDefecto = "eurekabank";
-        public const string UsuarioPorDefecto = "eurekabank_app";
-        public const string ClavePorDefecto = "EurekaBank2026!";
 
         private readonly string cadenaConexion;
 
         public ProveedorConexion()
-            : this(Leer(VariableServidor, ServidorPorDefecto), int.Parse(Leer(VariablePuerto, PuertoPorDefecto)),
-                  Leer(VariableEsquema, EsquemaPorDefecto), Leer(VariableUsuario, UsuarioPorDefecto),
-                  Leer(VariableClave, ClavePorDefecto))
+            : this(Leer(VariableServidor, ServidorPorDefecto), Leer(VariableEsquema, EsquemaPorDefecto))
         {
         }
 
-        public ProveedorConexion(string servidor, int puerto, string esquema, string usuario, string clave)
+        public ProveedorConexion(string servidor, string esquema)
         {
             Servidor = servidor;
-            Puerto = puerto;
             Esquema = esquema;
-            Usuario = usuario;
-            MySqlConnectionStringBuilder constructor = new MySqlConnectionStringBuilder
+            SqlConnectionStringBuilder constructor = new SqlConnectionStringBuilder
             {
-                Server = servidor,
-                Port = (uint)puerto,
-                Database = esquema,
-                UserID = usuario,
-                Password = clave,
-                SslMode = MySqlSslMode.None,
-                AllowPublicKeyRetrieval = true,
-                ConnectionTimeout = 5,
-                DefaultCommandTimeout = 15,
-                CharacterSet = "utf8mb4",
-                MaximumPoolSize = 50
+                DataSource = servidor,
+                InitialCatalog = esquema,
+                IntegratedSecurity = true,
+                TrustServerCertificate = true,
+                ConnectTimeout = 5,
+                MaxPoolSize = 50
             };
             cadenaConexion = constructor.ConnectionString;
         }
 
         public string Servidor { get; private set; }
-        public int Puerto { get; private set; }
         public string Esquema { get; private set; }
-        public string Usuario { get; private set; }
 
-        public MySqlConnection ObtenerConexion()
+        public SqlConnection ObtenerConexion()
         {
-            MySqlConnection conexion = new MySqlConnection(cadenaConexion);
+            SqlConnection conexion = new SqlConnection(cadenaConexion);
             conexion.Open();
             return conexion;
         }

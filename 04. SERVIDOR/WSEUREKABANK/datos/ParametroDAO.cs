@@ -1,6 +1,6 @@
 using System.Globalization;
 using ec.edu.monster.utilidades;
-using MySqlConnector;
+using System.Data.SqlClient;
 
 namespace ec.edu.monster.datos
 {
@@ -18,8 +18,8 @@ namespace ec.edu.monster.datos
 
         public decimal? Valor(string codigo)
         {
-            using (MySqlConnection conexion = proveedor.ObtenerConexion())
-            using (MySqlCommand consulta = new MySqlCommand(Consulta, conexion))
+            using (SqlConnection conexion = proveedor.ObtenerConexion())
+            using (SqlCommand consulta = new SqlCommand(Consulta, conexion))
             {
                 consulta.Parameters.AddWithValue("@codigo", codigo);
                 object valor = consulta.ExecuteScalar();

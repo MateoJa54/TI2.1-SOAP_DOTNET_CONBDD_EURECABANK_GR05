@@ -1,5 +1,5 @@
 using ec.edu.monster.utilidades;
-using MySqlConnector;
+using System.Data.SqlClient;
 
 namespace ec.edu.monster.datos
 {
@@ -8,9 +8,9 @@ namespace ec.edu.monster.datos
         private const string Consulta =
             "SELECT u.chr_emplcodigo, u.vch_emplclave, u.vch_emplestado, " +
             "CONCAT(e.vch_emplnombre, ' ', e.vch_emplpaterno, ' ', e.vch_emplmaterno) AS vch_emplnombrecompleto, " +
-            "(SELECT m.vch_modunombre FROM permiso p JOIN modulo m ON m.int_moducodigo = p.int_moducodigo " +
+            "(SELECT TOP 1 m.vch_modunombre FROM permiso p JOIN modulo m ON m.int_moducodigo = p.int_moducodigo " +
             " WHERE p.chr_emplcodigo = u.chr_emplcodigo AND p.vch_permestado = 'ACTIVO' " +
-            " ORDER BY m.int_moducodigo LIMIT 1) AS vch_modunombre " +
+            " ORDER BY m.int_moducodigo) AS vch_modunombre " +
             "FROM usuario u JOIN empleado e ON e.chr_emplcodigo = u.chr_emplcodigo " +
             "WHERE u.vch_emplusuario = @usuario";
 
@@ -27,11 +27,11 @@ namespace ec.edu.monster.datos
             {
                 return null;
             }
-            using (MySqlConnection conexion = proveedor.ObtenerConexion())
-            using (MySqlCommand consulta = new MySqlCommand(Consulta, conexion))
+            using (SqlConnection conexion = proveedor.ObtenerConexion())
+            using (SqlCommand consulta = new SqlCommand(Consulta, conexion))
             {
                 consulta.Parameters.AddWithValue("@usuario", nombreUsuario);
-                using (MySqlDataReader lector = consulta.ExecuteReader())
+                using (SqlDataReader lector = consulta.ExecuteReader())
                 {
                     if (!lector.Read())
                     {
@@ -39,10 +39,10 @@ namespace ec.edu.monster.datos
                     }
                     int rol = lector.GetOrdinal("vch_modunombre");
                     return new DatosUsuario(
-                        lector.GetString("chr_emplcodigo"),
-                        lector.GetString("vch_emplclave"),
-                        lector.GetString("vch_emplestado"),
-                        lector.GetString("vch_emplnombrecompleto"),
+                        lector.GetString(lector.GetOrdinal("chr_emplcodigo")),
+                        lector.GetString(lector.GetOrdinal("vch_emplclave")),
+                        lector.GetString(lector.GetOrdinal("vch_emplestado")),
+                        lector.GetString(lector.GetOrdinal("vch_emplnombrecompleto")),
                         lector.IsDBNull(rol) ? null : lector.GetString(rol));
                 }
             }

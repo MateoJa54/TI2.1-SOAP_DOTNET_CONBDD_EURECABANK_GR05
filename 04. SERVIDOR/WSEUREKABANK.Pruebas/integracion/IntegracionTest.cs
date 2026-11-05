@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ec.edu.monster.pruebas.integracion
 {
-    // Corren contra el esquema eurekabank_prueba (03. BDD\crear_bdd_prueba.ps1), nunca contra eurekabank.
+    // Corren contra la base eurekabank_prueba de SQL Server (03. BDD\SQLSERVER\cargar_bdd_sqlserver.ps1 -Esquema eurekabank_prueba -Recrear), nunca contra eurekabank.
     // Escriben saldos y logsession: para volver a la semilla se ejecuta otra vez crear_bdd_prueba.ps1.
     [TestClass]
     [TestCategory("Integracion")]
@@ -24,7 +24,7 @@ namespace ec.edu.monster.pruebas.integracion
         [TestInitialize]
         public void Preparar()
         {
-            proveedor = new ProveedorConexion("127.0.0.1", 3306, Esquema, "eurekabank_app", "EurekaBank2026!");
+            proveedor = new ProveedorConexion("localhost", Esquema);
             raiz = RaizComposicion.Crear(proveedor, TimeSpan.FromMinutes(30));
             token = raiz.Autenticacion.Autenticar("cromero", "Cromero2026").Token;
             Assert.IsNotNull(token, "no se pudo iniciar sesión: ¿existe el esquema " + Esquema + "?");
@@ -120,9 +120,9 @@ namespace ec.edu.monster.pruebas.integracion
         {
             CuentaDAO dao = new CuentaDAO(proveedor);
             CuentaDTO antes = dao.BuscarPorCodigo("00200001");
-            UnidadTrabajoMySql unidad = new UnidadTrabajoMySql(proveedor);
+            UnidadTrabajoSql unidad = new UnidadTrabajoSql(proveedor);
             MovimientoDAO movimientos = new MovimientoDAO(proveedor);
-            Assert.ThrowsException<MySqlConnector.MySqlException>(() => unidad.Ejecutar<int>(contexto =>
+            Assert.ThrowsException<System.Data.SqlClient.SqlException>(() => unidad.Ejecutar<int>(contexto =>
             {
                 dao.BloquearPorCodigo(contexto, "00200001");
                 dao.ActualizarSaldoYContador(contexto, "00200001", antes.Saldo + 999m, antes.OperacionesRealizadas + 1);
@@ -142,8 +142,8 @@ namespace ec.edu.monster.pruebas.integracion
             RespuestaAutenticacion a = raiz.Autenticacion.Autenticar("lcastro", "Castro2026");
             Assert.AreEqual("200", a.Codigo);
             Assert.AreEqual("200", raiz.Autenticacion.CerrarSesion(a.Token).Codigo);
-            using (MySqlConnector.MySqlConnection c = proveedor.ObtenerConexion())
-            using (MySqlConnector.MySqlCommand cmd = new MySqlConnector.MySqlCommand(
+            using (System.Data.SqlClient.SqlConnection c = proveedor.ObtenerConexion())
+            using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(
                 "SELECT COUNT(*) FROM logsession WHERE chr_emplcodigo='0002' AND fec_salida IS NOT NULL", c))
             {
                 Assert.IsTrue(Convert.ToInt32(cmd.ExecuteScalar()) >= 1);

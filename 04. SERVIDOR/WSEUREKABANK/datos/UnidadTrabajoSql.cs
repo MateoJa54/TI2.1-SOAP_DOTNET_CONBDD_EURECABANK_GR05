@@ -1,21 +1,22 @@
 using System;
-using MySqlConnector;
+using System.Data.SqlClient;
 
 namespace ec.edu.monster.datos
 {
-    public class UnidadTrabajoMySql : IUnidadTrabajo
+    // Un movimiento es una sola transacción (RB-02): se confirma completa o se deshace completa.
+    public class UnidadTrabajoSql : IUnidadTrabajo
     {
         private readonly ProveedorConexion proveedor;
 
-        public UnidadTrabajoMySql(ProveedorConexion proveedor)
+        public UnidadTrabajoSql(ProveedorConexion proveedor)
         {
             this.proveedor = proveedor;
         }
 
         public T Ejecutar<T>(Func<ContextoTransaccional, T> cuerpo)
         {
-            using (MySqlConnection conexion = proveedor.ObtenerConexion())
-            using (MySqlTransaction transaccion = conexion.BeginTransaction())
+            using (SqlConnection conexion = proveedor.ObtenerConexion())
+            using (SqlTransaction transaccion = conexion.BeginTransaction())
             {
                 try
                 {
@@ -31,7 +32,7 @@ namespace ec.edu.monster.datos
                     }
                     catch (Exception)
                     {
-                        // la conexión ya se perdió: el servidor deshace la transacción al cerrarla
+                        // la conexión ya se perdió: SQL Server deshace la transacción al cerrarla
                     }
                     throw;
                 }

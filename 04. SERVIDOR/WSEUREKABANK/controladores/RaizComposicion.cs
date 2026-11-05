@@ -35,7 +35,7 @@ namespace ec.edu.monster.controladores
             TipoMovimientoDAO tipoMovimientoDAO = new TipoMovimientoDAO(proveedor);
             MonedaDAO monedaDAO = new MonedaDAO(proveedor);
             CostoDAO costoDAO = new CostoDAO(proveedor);
-            UnidadTrabajoMySql unidadTrabajo = new UnidadTrabajoMySql(proveedor);
+            UnidadTrabajoSql unidadTrabajo = new UnidadTrabajoSql(proveedor);
             return new RaizComposicion
             {
                 Tokens = tokens,

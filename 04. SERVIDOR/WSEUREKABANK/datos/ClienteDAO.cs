@@ -1,5 +1,5 @@
 using ec.edu.monster.utilidades;
-using MySqlConnector;
+using System.Data.SqlClient;
 
 namespace ec.edu.monster.datos
 {
@@ -22,14 +22,14 @@ namespace ec.edu.monster.datos
             {
                 return null;
             }
-            using (MySqlConnection conexion = proveedor.ObtenerConexion())
-            using (MySqlCommand consulta = new MySqlCommand(Consulta, conexion))
+            using (SqlConnection conexion = proveedor.ObtenerConexion())
+            using (SqlCommand consulta = new SqlCommand(Consulta, conexion))
             {
                 consulta.Parameters.AddWithValue("@dni", dni);
-                using (MySqlDataReader lector = consulta.ExecuteReader())
+                using (SqlDataReader lector = consulta.ExecuteReader())
                 {
                     return lector.Read()
-                        ? new DatosCliente(lector.GetString("chr_cliecodigo"), lector.GetString("nombre"))
+                        ? new DatosCliente(lector.GetString(lector.GetOrdinal("chr_cliecodigo")), lector.GetString(lector.GetOrdinal("nombre")))
                         : null;
                 }
             }

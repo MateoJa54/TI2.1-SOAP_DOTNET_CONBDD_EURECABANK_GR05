@@ -1,4 +1,4 @@
-using MySqlConnector;
+using System.Data.SqlClient;
 
 namespace ec.edu.monster.datos
 {
@@ -16,15 +16,15 @@ namespace ec.edu.monster.datos
 
         public DatosTipoMovimiento BuscarPorCodigo(string codigo)
         {
-            using (MySqlConnection conexion = proveedor.ObtenerConexion())
-            using (MySqlCommand consulta = new MySqlCommand(Consulta, conexion))
+            using (SqlConnection conexion = proveedor.ObtenerConexion())
+            using (SqlCommand consulta = new SqlCommand(Consulta, conexion))
             {
                 consulta.Parameters.AddWithValue("@codigo", codigo);
-                using (MySqlDataReader lector = consulta.ExecuteReader())
+                using (SqlDataReader lector = consulta.ExecuteReader())
                 {
                     return lector.Read()
-                        ? new DatosTipoMovimiento(lector.GetString("chr_tipocodigo"),
-                            lector.GetString("vch_tipodescripcion"), lector.GetString("vch_tipoaccion"))
+                        ? new DatosTipoMovimiento(lector.GetString(lector.GetOrdinal("chr_tipocodigo")),
+                            lector.GetString(lector.GetOrdinal("vch_tipodescripcion")), lector.GetString(lector.GetOrdinal("vch_tipoaccion")))
                         : null;
                 }
             }

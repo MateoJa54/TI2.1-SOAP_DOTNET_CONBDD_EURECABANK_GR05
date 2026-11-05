@@ -1,5 +1,5 @@
 using ec.edu.monster.utilidades;
-using MySqlConnector;
+using System.Data.SqlClient;
 
 namespace ec.edu.monster.datos
 {
@@ -25,15 +25,15 @@ namespace ec.edu.monster.datos
             {
                 return false;
             }
-            using (MySqlConnection conexion = proveedor.ObtenerConexion())
-            using (MySqlCommand consulta = new MySqlCommand(Consulta, conexion))
+            using (SqlConnection conexion = proveedor.ObtenerConexion())
+            using (SqlCommand consulta = new SqlCommand(Consulta, conexion))
             {
                 consulta.Parameters.AddWithValue("@moneda", codigoMoneda);
-                using (MySqlDataReader lector = consulta.ExecuteReader())
+                using (SqlDataReader lector = consulta.ExecuteReader())
                 {
                     return lector.Read()
-                        && lector.GetInt64(0) > 0 && lector.GetInt64(1) > 0
-                        && lector.GetInt64(2) > 0 && lector.GetInt64(3) > 0;
+                        && lector.GetInt32(0) > 0 && lector.GetInt32(1) > 0
+                        && lector.GetInt32(2) > 0 && lector.GetInt32(3) > 0;
                 }
             }
         }

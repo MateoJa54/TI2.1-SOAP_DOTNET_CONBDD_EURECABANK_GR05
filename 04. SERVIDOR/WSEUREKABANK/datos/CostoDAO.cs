@@ -1,5 +1,5 @@
 using ec.edu.monster.utilidades;
-using MySqlConnector;
+using System.Data.SqlClient;
 
 namespace ec.edu.monster.datos
 {
@@ -27,11 +27,11 @@ namespace ec.edu.monster.datos
             {
                 return null;
             }
-            using (MySqlConnection conexion = proveedor.ObtenerConexion())
-            using (MySqlCommand consulta = new MySqlCommand(ConsultaMantenimiento, conexion))
+            using (SqlConnection conexion = proveedor.ObtenerConexion())
+            using (SqlCommand consulta = new SqlCommand(ConsultaMantenimiento, conexion))
             {
                 consulta.Parameters.AddWithValue("@moneda", moneda);
-                using (MySqlDataReader lector = consulta.ExecuteReader())
+                using (SqlDataReader lector = consulta.ExecuteReader())
                 {
                     return lector.Read()
                         ? new DatosCostoMantenimiento(lector.GetDecimal(0), lector.GetDecimal(1))
@@ -56,8 +56,8 @@ namespace ec.edu.monster.datos
             {
                 return null;
             }
-            using (MySqlConnection conexion = proveedor.ObtenerConexion())
-            using (MySqlCommand consulta = new MySqlCommand(sql, conexion))
+            using (SqlConnection conexion = proveedor.ObtenerConexion())
+            using (SqlCommand consulta = new SqlCommand(sql, conexion))
             {
                 consulta.Parameters.AddWithValue("@moneda", moneda);
                 object valor = consulta.ExecuteScalar();

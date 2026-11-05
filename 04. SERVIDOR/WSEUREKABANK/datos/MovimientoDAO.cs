@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using ec.edu.monster.modelos;
 using ec.edu.monster.utilidades;
-using MySqlConnector;
 
 namespace ec.edu.monster.datos
 {
@@ -32,24 +33,24 @@ namespace ec.edu.monster.datos
             {
                 return movimientos;
             }
-            using (MySqlConnection conexion = proveedor.ObtenerConexion())
-            using (MySqlCommand consulta = new MySqlCommand(Consulta, conexion))
+            using (SqlConnection conexion = proveedor.ObtenerConexion())
+            using (SqlCommand consulta = new SqlCommand(Consulta, conexion))
             {
                 consulta.Parameters.AddWithValue("@cuenta", codigoCuenta);
-                using (MySqlDataReader lector = consulta.ExecuteReader())
+                using (SqlDataReader lector = consulta.ExecuteReader())
                 {
                     while (lector.Read())
                     {
                         object fecha = lector["dtt_movifecha"];
                         movimientos.Add(new MovimientoDTO(
-                            lector.GetString("chr_emplcodigo"),
+                            lector.GetString(lector.GetOrdinal("chr_emplcodigo")),
                             fecha is DBNull ? null : ((DateTime)fecha).ToString(Codigos.FormatoFecha),
-                            FormatoDinero.ADosDecimales(lector.GetDecimal("dec_moviimporte")),
-                            lector.GetInt32("int_movinumero"),
-                            lector.IsDBNull(lector.GetOrdinal("chr_cuenreferencia")) ? null : lector.GetString("chr_cuenreferencia"),
-                            lector.GetString("vch_tipoaccion"),
-                            lector.GetString("chr_tipocodigo"),
-                            lector.GetString("vch_tipodescripcion")));
+                            FormatoDinero.ADosDecimales(lector.GetDecimal(lector.GetOrdinal("dec_moviimporte"))),
+                            lector.GetInt32(lector.GetOrdinal("int_movinumero")),
+                            lector.IsDBNull(lector.GetOrdinal("chr_cuenreferencia")) ? null : lector.GetString(lector.GetOrdinal("chr_cuenreferencia")),
+                            lector.GetString(lector.GetOrdinal("vch_tipoaccion")),
+                            lector.GetString(lector.GetOrdinal("chr_tipocodigo")),
+                            lector.GetString(lector.GetOrdinal("vch_tipodescripcion"))));
                     }
                 }
             }
@@ -58,16 +59,18 @@ namespace ec.edu.monster.datos
 
         public void Insertar(ContextoTransaccional contexto, string codigoCuenta, MovimientoDTO movimiento)
         {
-            using (MySqlCommand insercion = new MySqlCommand(Insercion,
-                (MySqlConnection)contexto.Conexion, (MySqlTransaction)contexto.Transaccion))
+            using (SqlCommand insercion = new SqlCommand(Insercion,
+                (SqlConnection)contexto.Conexion, (SqlTransaction)contexto.Transaccion))
             {
                 insercion.Parameters.AddWithValue("@cuenta", codigoCuenta);
                 insercion.Parameters.AddWithValue("@numero", movimiento.Numero);
-                insercion.Parameters.AddWithValue("@fecha", movimiento.Fecha == null
-                    ? (object)DBNull.Value : DateTime.ParseExact(movimiento.Fecha, Codigos.FormatoFecha, null));
+                insercion.Parameters.Add("@fecha", SqlDbType.Date).Value = movimiento.Fecha == null
+                    ? (object)DBNull.Value : DateTime.ParseExact(movimiento.Fecha, Codigos.FormatoFecha, null);
                 insercion.Parameters.AddWithValue("@empleado", movimiento.Empleado);
                 insercion.Parameters.AddWithValue("@tipo", movimiento.TipoCodigo);
-                insercion.Parameters.AddWithValue("@importe", FormatoDinero.ADosDecimales(movimiento.Importe));
+                insercion.Parameters.Add("@importe", SqlDbType.Decimal).Value = FormatoDinero.ADosDecimales(movimiento.Importe);
+                insercion.Parameters["@importe"].Precision = 12;
+                insercion.Parameters["@importe"].Scale = 2;
                 insercion.Parameters.AddWithValue("@referencia", (object)movimiento.Referencia ?? DBNull.Value);
                 insercion.ExecuteNonQuery();
             }
