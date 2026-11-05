@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using ec.edu.monster.escritorio.vista.controles;
@@ -27,6 +27,8 @@ namespace ec.edu.monster.escritorio.vista
         public static readonly Color Marca = Hex(0x0F8591);
         public static readonly Color Error = Hex(0xB8313A);
         public static readonly Color ErrorSuave = Hex(0xFBEBEC);
+        public static readonly Color Exito = Hex(0x15803D);
+        public static readonly Color ExitoSuave = Hex(0xE8F6EE);
 
         public const string Familia = "Segoe UI";
         public const float TamanoBase = 9.75f;
