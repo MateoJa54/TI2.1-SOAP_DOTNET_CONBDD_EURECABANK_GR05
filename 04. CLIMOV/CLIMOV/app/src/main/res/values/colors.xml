@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_navy">#11304E</color>
+    <color name="brand_navy_dark">#0C253F</color>
+    <color name="brand_teal">#007D70</color>
+    <color name="surface_canvas">#F6F8FB</color>
+    <color name="surface_card">#FFFFFFFF</color>
+    <color name="text_primary">#22303F</color>
+    <color name="text_secondary">#677584</color>
+    <color name="outline">#DEE5EC</color>
+</resources>
