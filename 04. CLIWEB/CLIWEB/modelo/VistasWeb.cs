@@ -77,8 +77,21 @@ namespace ec.edu.monster.web.modelo
         public List<FilaMovimiento> Filas { get; set; }
     }
 
+    public class DatoOperacion
+    {
+        public string Etiqueta { get; set; }
+        public string Valor { get; set; }
+    }
+
     public class OperacionesVista
     {
+        public OperacionesVista()
+        {
+            Datos = new System.Collections.Generic.List<DatoOperacion>();
+        }
+
+        public System.Collections.Generic.List<DatoOperacion> Datos { get; set; }
+
         public string Operacion { get; set; }
         public string Cuenta { get; set; }
         public string CuentaDestino { get; set; }

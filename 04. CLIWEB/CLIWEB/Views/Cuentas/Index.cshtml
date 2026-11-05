@@ -2,17 +2,23 @@
 @{
     ViewBag.Title = "Cuentas";
 }
+<section class="encabezado">
+    <h1>Cuentas de un cliente</h1>
+    <p class="texto-suave">Escriba la cédula del cliente para ver todas sus cuentas.</p>
+</section>
+
 <section class="panel">
-    <h1>Cuentas por cliente</h1>
-    <p class="texto-suave">Busque las cuentas de un cliente por su cédula.</p>
     @using (Html.BeginForm("Listar", "Cuentas", FormMethod.Post, new { @class = "formulario formulario-linea" }))
     {
         @Html.AntiForgeryToken()
         <div class="campo">
-            <label for="cedula">Cédula</label>
-            <input id="cedula" name="cedula" type="text" inputmode="numeric" value="@Model.Cedula" />
+            <label for="cedula">Cédula del cliente</label>
+            <input id="cedula" name="cedula" type="text" inputmode="numeric" autocomplete="off" value="@Model.Cedula" placeholder="Ej. 06914897" />
+            <span class="ayuda">Sin puntos ni espacios.</span>
         </div>
-        <button type="submit" class="btn btn-primario">Buscar cuentas</button>
+        <div class="campo" style="flex:0 0 auto">
+            <button type="submit" class="btn btn-primario">Buscar cuentas</button>
+        </div>
     }
 </section>
 
@@ -20,13 +26,18 @@
 {
     <div class="error" role="alert">@Model.Error</div>
 }
+
 @if (Model.Consultado && string.IsNullOrEmpty(Model.Error))
 {
     <section class="panel">
-        <h2>@(string.IsNullOrEmpty(Model.NombreCliente) ? "Cuentas del cliente" : Model.NombreCliente)</h2>
+        <div class="cabecera-seccion">
+            <h2 style="margin:0">@(string.IsNullOrEmpty(Model.NombreCliente) ? "Cuentas del cliente" : Model.NombreCliente)</h2>
+            <span class="texto-suave">Cédula @Model.Cedula · @Model.Cuentas.Count cuenta(s)</span>
+        </div>
+
         @if (Model.Cuentas.Count == 0)
         {
-            <div class="vacio">Sin resultados</div>
+            <div class="vacio">Este cliente no tiene cuentas registradas.</div>
         }
         else
         {
@@ -48,13 +59,13 @@
                                 <td>@cuenta.Codigo</td>
                                 <td>@cuenta.Moneda</td>
                                 <td class="num">@cuenta.Saldo</td>
-                                <td>@cuenta.Estado</td>
+                                <td><span class="etiqueta @(cuenta.Estado == "ACTIVO" ? "activo" : "inactivo")">@cuenta.Estado</span></td>
                                 <td>
                                     @using (Html.BeginForm("Consultar", "Cuentas", FormMethod.Post, new { @class = "en-linea" }))
                                     {
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="cuenta" value="@cuenta.Codigo" />
-                                        <button type="submit" class="btn btn-secundario btn-pequeno">Ver</button>
+                                        <button type="submit" class="btn btn-secundario btn-pequeno">Ver detalle</button>
                                     }
                                 </td>
                             </tr>

@@ -1,46 +1,101 @@
 @model ec.edu.monster.web.modelo.OperacionesVista
 @{
     ViewBag.Title = "Operaciones";
+    var tipo = string.IsNullOrEmpty(Model.Operacion) ? "deposito" : Model.Operacion;
     var opciones = new[]
     {
-        new { Valor = "deposito", Texto = "Depósito" },
-        new { Valor = "retiro", Texto = "Retiro" },
-        new { Valor = "transferencia", Texto = "Transferencia" }
+        new { Valor = "deposito", Nombre = "Depósito", Ayuda = "Suma dinero a una cuenta." },
+        new { Valor = "retiro", Nombre = "Retiro", Ayuda = "Saca dinero de una cuenta." },
+        new { Valor = "transferencia", Nombre = "Transferencia", Ayuda = "Mueve dinero de una cuenta a otra." }
     };
 }
-<section class="panel">
+<section class="encabezado">
     <h1>Operaciones</h1>
-    <p class="texto-suave">Registre un depósito, un retiro o una transferencia entre cuentas.</p>
+    <p class="texto-suave">Registre un movimiento de dinero. El servidor valida cada operación y le muestra el resultado.</p>
+</section>
 
-    @if (!string.IsNullOrEmpty(Model.Mensaje))
-    {
-        <div class="@(Model.Exito ? "exito" : "error")" role="@(Model.Exito ? "status" : "alert")">@Model.Mensaje</div>
-    }
-
-    @using (Html.BeginForm("Ejecutar", "Operaciones", FormMethod.Post, new { @class = "formulario" }))
-    {
+<section class="panel">
+    <form method="post" action="@Url.Action("Ejecutar", "Operaciones")" class="formulario" id="formulario-operacion">
         @Html.AntiForgeryToken()
-        <div class="campo">
-            <label for="operacion">Operación</label>
-            <select id="operacion" name="operacion">
-                @foreach (var opcion in opciones)
-                {
-                    <option value="@opcion.Valor" @(Model.Operacion == opcion.Valor ? Html.Raw("selected") : null)>@opcion.Texto</option>
-                }
-            </select>
+
+        <fieldset class="opciones">
+            <legend>¿Qué desea hacer?</legend>
+            @foreach (var opcion in opciones)
+            {
+                <label class="opcion">
+                    <input type="radio" name="operacion" value="@opcion.Valor" @(tipo == opcion.Valor ? "checked" : "") />
+                    <strong>@opcion.Nombre</strong>
+                    <span>@opcion.Ayuda</span>
+                </label>
+            }
+        </fieldset>
+
+        <div class="par-campos">
+            <div class="campo">
+                <label for="cuenta" id="etiqueta-cuenta">Cuenta</label>
+                <input id="cuenta" name="cuenta" type="text" inputmode="numeric" autocomplete="off" value="@Model.Cuenta" placeholder="Ej. 00200003" />
+                <span class="ayuda" id="ayuda-cuenta">Cuenta que recibe el dinero.</span>
+            </div>
+            <div class="campo" id="campo-destino" @(tipo == "transferencia" ? "" : "hidden")>
+                <label for="cuentaDestino">Cuenta destino</label>
+                <input id="cuentaDestino" name="cuentaDestino" type="text" inputmode="numeric" autocomplete="off" value="@Model.CuentaDestino" placeholder="Ej. 00200001" />
+                <span class="ayuda">Cuenta que recibe la transferencia. Debe ser de la misma moneda.</span>
+            </div>
         </div>
-        <div class="campo">
-            <label for="cuenta">Cuenta</label>
-            <input id="cuenta" name="cuenta" type="text" value="@Model.Cuenta" />
-        </div>
-        <div class="campo">
-            <label for="cuentaDestino">Cuenta destino (solo transferencias)</label>
-            <input id="cuentaDestino" name="cuentaDestino" type="text" value="@Model.CuentaDestino" />
-        </div>
+
         <div class="campo">
             <label for="monto">Monto</label>
-            <input id="monto" name="monto" type="text" inputmode="decimal" value="@Model.Monto" />
+            <input id="monto" name="monto" type="text" inputmode="decimal" autocomplete="off" value="@Model.Monto" placeholder="Ej. 100.00" />
+            <span class="ayuda">Número mayor que cero, con hasta dos decimales.</span>
         </div>
-        <button type="submit" class="btn btn-primario btn-bloque">Ejecutar operación</button>
-    }
+
+        <div class="acciones">
+            <button type="submit" class="btn btn-primario" id="boton-ejecutar">Ejecutar operación</button>
+        </div>
+    </form>
 </section>
+
+@if (!string.IsNullOrEmpty(Model.Mensaje))
+{
+    <section id="resultado" class="resultado @(Model.Exito ? "exito" : "error")" role="@(Model.Exito ? "status" : "alert")">
+        <h2>@(Model.Exito ? "Operación registrada" : "La operación no se realizó")</h2>
+        <p style="margin:0">@Model.Mensaje</p>
+        @if (Model.Exito && Model.Datos.Count > 0)
+        {
+            <dl class="detalle">
+                @foreach (var dato in Model.Datos)
+                {
+                    <div><dt>@dato.Etiqueta</dt><dd>@dato.Valor</dd></div>
+                }
+            </dl>
+        }
+    </section>
+}
+
+<script>
+    (function () {
+        var campoDestino = document.getElementById('campo-destino');
+        var etiquetaCuenta = document.getElementById('etiqueta-cuenta');
+        var ayudaCuenta = document.getElementById('ayuda-cuenta');
+        var radios = document.querySelectorAll('input[name="operacion"]');
+        function sincronizar() {
+            var tipo = document.querySelector('input[name="operacion"]:checked');
+            var valor = tipo ? tipo.value : 'deposito';
+            campoDestino.hidden = valor !== 'transferencia';
+            if (valor === 'transferencia') {
+                etiquetaCuenta.textContent = 'Cuenta origen';
+                ayudaCuenta.textContent = 'Cuenta de la que sale el dinero.';
+            } else if (valor === 'retiro') {
+                etiquetaCuenta.textContent = 'Cuenta';
+                ayudaCuenta.textContent = 'Cuenta de la que sale el dinero.';
+            } else {
+                etiquetaCuenta.textContent = 'Cuenta';
+                ayudaCuenta.textContent = 'Cuenta que recibe el dinero.';
+            }
+        }
+        radios.forEach(function (r) { r.addEventListener('change', sincronizar); });
+        sincronizar();
+        var resultado = document.getElementById('resultado');
+        if (resultado) { resultado.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    })();
+</script>

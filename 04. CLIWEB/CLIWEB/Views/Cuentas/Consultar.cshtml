@@ -1,33 +1,47 @@
 @model ec.edu.monster.web.modelo.ConsultaCuentaVista
 @{
-    ViewBag.Title = "Consulta de cuenta";
+    ViewBag.Title = "Detalle de cuenta";
 }
-<section class="panel">
-    <h1>Consulta de cuenta</h1>
+<section class="encabezado">
+    <h1>Detalle de cuenta</h1>
+    <p class="texto-suave">Datos de la cuenta y de su titular.</p>
+</section>
 
+<section class="panel">
     @if (!string.IsNullOrEmpty(Model.Error))
     {
         <div class="error" role="alert">@Model.Error</div>
     }
     else if (Model.Detalle == null)
     {
-        <div class="vacio">Sin resultados</div>
+        <div class="vacio">No hay datos para mostrar.</div>
     }
     else
     {
+        <div class="cabecera-seccion">
+            <h2 style="margin:0">Cuenta @Model.Detalle.Codigo</h2>
+            <span class="etiqueta @(Model.Detalle.Estado == "ACTIVO" ? "activo" : "inactivo")">@Model.Detalle.Estado</span>
+        </div>
         <dl class="detalle">
-            <div><dt>Cuenta</dt><dd>@Model.Detalle.Codigo</dd></div>
-            <div><dt>Titular</dt><dd>@Model.Detalle.NombreCliente</dd></div>
-            <div><dt>Moneda</dt><dd>@Model.Detalle.Moneda</dd></div>
-            <div><dt>Saldo</dt><dd>@Model.Detalle.Saldo</dd></div>
-            <div><dt>Estado</dt><dd>@Model.Detalle.Estado</dd></div>
-            <div><dt>Sucursal</dt><dd>@Model.Detalle.CodigoSucursal</dd></div>
-            <div><dt>Fecha de creación</dt><dd>@Model.Detalle.FechaCreacion</dd></div>
+            <div><dt>Titular</dt><dd class="texto">@Model.Detalle.NombreCliente</dd></div>
+            <div><dt>Saldo</dt><dd>@Model.Detalle.Saldo <span class="texto-tenue">@Model.Detalle.Moneda</span></dd></div>
+            <div><dt>Moneda</dt><dd class="texto">@Model.Detalle.Moneda</dd></div>
+            <div><dt>Sucursal</dt><dd class="texto">@Model.Detalle.CodigoSucursal</dd></div>
+            <div><dt>Fecha de creación</dt><dd class="texto">@Model.Detalle.FechaCreacion</dd></div>
             <div><dt>Operaciones realizadas</dt><dd>@Model.Detalle.OperacionesRealizadas</dd></div>
         </dl>
     }
 
-    <p class="acciones">
+    <p class="acciones" style="margin-top:18px">
         <a class="btn btn-secundario" href="@Url.Action("Index", "Cuentas")">Volver a cuentas</a>
+        @if (Model.Detalle != null)
+        {
+            using (Html.BeginForm("Consultar", "Movimientos", FormMethod.Post, new { @class = "en-linea" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="cuenta" value="@Model.Detalle.Codigo" />
+                <button type="submit" class="btn btn-primario">Ver movimientos</button>
+            }
+        }
     </p>
 </section>

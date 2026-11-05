@@ -3,9 +3,11 @@
     ViewBag.Title = "Acceso";
 }
 <section class="acceso">
-    <img class="acceso-marca" src="@Url.Content("~/Content/img/marca.svg")" alt="Monster" width="64" height="64" />
-    <h1>Acceso al cliente web</h1>
-    <p class="texto-suave">Ingrese con sus credenciales de empleado.</p>
+    <div class="acceso-cabecera">
+        <img class="acceso-marca" src="@Url.Content("~/Content/img/marca.svg")" alt="" width="56" height="56" />
+        <h1>EURECABANK</h1>
+        <p class="texto-suave">Acceso para empleados</p>
+    </div>
 
     @if (!string.IsNullOrEmpty(Model.Aviso))
     {
@@ -21,7 +23,7 @@
         @Html.AntiForgeryToken()
         <div class="campo">
             <label for="usuario">Usuario</label>
-            <input id="usuario" name="usuario" type="text" value="@Model.Usuario" autocomplete="username" />
+            <input id="usuario" name="usuario" type="text" value="@Model.Usuario" autocomplete="username" autofocus />
         </div>
         <div class="campo">
             <label for="clave">Clave</label>
@@ -30,5 +32,6 @@
         <button type="submit" class="btn btn-primario btn-bloque">Ingresar</button>
     }
 
-    <img class="acceso-recurso" src="@Url.Content("~/Content/img/Monster.png")" alt="Monster" />
+    <p class="acceso-pie">La sesión dura 30 minutos desde que ingresa.</p>
+    <img class="acceso-recurso" src="@Url.Content("~/Content/img/Monster.png")" alt="" />
 </section>

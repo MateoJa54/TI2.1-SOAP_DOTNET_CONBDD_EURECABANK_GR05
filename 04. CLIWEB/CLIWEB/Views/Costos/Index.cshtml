@@ -2,17 +2,23 @@
 @{
     ViewBag.Title = "Costos de mantenimiento";
 }
-<section class="panel">
+<section class="encabezado">
     <h1>Costos de mantenimiento</h1>
-    <p class="texto-suave">Consulte los costos y el interés proyectado de una cuenta.</p>
+    <p class="texto-suave">Costos y interés proyectado de una cuenta. Estas cifras son una proyección: el cobro real lo hace un proceso aparte.</p>
+</section>
+
+<section class="panel">
     @using (Html.BeginForm("Consultar", "Costos", FormMethod.Post, new { @class = "formulario formulario-linea" }))
     {
         @Html.AntiForgeryToken()
         <div class="campo">
-            <label for="cuenta">Cuenta</label>
-            <input id="cuenta" name="cuenta" type="text" value="@Model.Cuenta" />
+            <label for="cuenta">Código de cuenta</label>
+            <input id="cuenta" name="cuenta" type="text" inputmode="numeric" autocomplete="off" value="@Model.Cuenta" placeholder="Ej. 00200002" />
+            <span class="ayuda">Ocho dígitos.</span>
         </div>
-        <button type="submit" class="btn btn-primario">Consultar costos</button>
+        <div class="campo" style="flex:0 0 auto">
+            <button type="submit" class="btn btn-primario">Consultar costos</button>
+        </div>
     }
 </section>
 
@@ -20,23 +26,28 @@
 {
     <div class="error" role="alert">@Model.Error</div>
 }
+
 @if (Model.Consultado && string.IsNullOrEmpty(Model.Error))
 {
     <section class="panel">
+        <div class="cabecera-seccion">
+            <h2 style="margin:0">Cuenta @Model.Cuenta</h2>
+        </div>
         @if (Model.Datos == null)
         {
-            <div class="vacio">Sin resultados</div>
+            <div class="vacio">No hay datos para mostrar.</div>
         }
         else
         {
             <dl class="detalle">
                 <div><dt>Saldo actual</dt><dd>@Formato.Monto(Model.Datos.SaldoActual)</dd></div>
                 <div><dt>Costo de mantenimiento</dt><dd>@Formato.Monto(Model.Datos.CostoMantenimiento)</dd></div>
-                <div><dt>Costo por movimiento</dt><dd>@Formato.Monto(Model.Datos.CostoMovimiento)</dd></div>
-                <div><dt>Interés proyectado</dt><dd>@Formato.Monto(Model.Datos.InteresProyectado)</dd></div>
                 <div><dt>Límite de mantenimiento</dt><dd>@Formato.Monto(Model.Datos.LimiteMantenimiento)</dd></div>
+                <div><dt>Costo por movimiento</dt><dd>@Formato.Monto(Model.Datos.CostoMovimiento)</dd></div>
                 <div><dt>Operaciones sin costo</dt><dd>@Model.Datos.OperacionesSinCosto</dd></div>
+                <div><dt>Interés mensual proyectado</dt><dd>@Formato.Monto(Model.Datos.InteresProyectado)</dd></div>
             </dl>
+            <p class="texto-suave" style="margin-top:14px">El mantenimiento se aplica si el saldo es igual o menor que el límite. Cada movimiento después de las operaciones sin costo tiene el cargo indicado.</p>
         }
     </section>
 }

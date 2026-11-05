@@ -77,7 +77,37 @@ namespace ec.edu.monster.web.controlador
             }
             vista.Exito = Presentacion.EsExito(respuesta);
             vista.Mensaje = Presentacion.Mensaje(respuesta);
+            if (vista.Exito)
+            {
+                DatosDe(vista, respuesta);
+            }
             return View("Index", vista);
+        }
+
+        private static void DatosDe(OperacionesVista vista, RespuestaBase respuesta)
+        {
+            var movimiento = respuesta as RespuestaMovimiento;
+            if (movimiento != null)
+            {
+                Agregar(vista, "Movimiento número", movimiento.Movimiento == null ? "" : movimiento.Movimiento.Numero.ToString());
+                Agregar(vista, "Saldo nuevo", Formato.Monto(movimiento.SaldoNuevo));
+                Agregar(vista, "Cargo por movimiento", Formato.Monto(movimiento.CostoAplicado));
+                return;
+            }
+            var transferencia = respuesta as RespuestaTransferencia;
+            if (transferencia != null)
+            {
+                Agregar(vista, "Movimiento de origen", transferencia.NumeroOrigen.ToString());
+                Agregar(vista, "Movimiento de destino", transferencia.NumeroDestino.ToString());
+                Agregar(vista, "ITF cobrado", Formato.Monto(transferencia.ItfAplicado));
+                Agregar(vista, "Saldo de origen", Formato.Monto(transferencia.SaldoOrigen));
+                Agregar(vista, "Saldo de destino", Formato.Monto(transferencia.SaldoDestino));
+            }
+        }
+
+        private static void Agregar(OperacionesVista vista, string etiqueta, string valor)
+        {
+            vista.Datos.Add(new DatoOperacion { Etiqueta = etiqueta, Valor = valor });
         }
 
         private ActionResult MostrarLocal(OperacionesVista vista, string codigo, string mensaje)

@@ -2,17 +2,23 @@
 @{
     ViewBag.Title = "Movimientos";
 }
-<section class="panel">
+<section class="encabezado">
     <h1>Movimientos de una cuenta</h1>
-    <p class="texto-suave">Indique el número de cuenta para ver sus movimientos.</p>
+    <p class="texto-suave">Historial de depósitos, retiros, transferencias y cargos de la cuenta.</p>
+</section>
+
+<section class="panel">
     @using (Html.BeginForm("Consultar", "Movimientos", FormMethod.Post, new { @class = "formulario formulario-linea" }))
     {
         @Html.AntiForgeryToken()
         <div class="campo">
-            <label for="cuenta">Cuenta</label>
-            <input id="cuenta" name="cuenta" type="text" value="@Model.Cuenta" />
+            <label for="cuenta">Código de cuenta</label>
+            <input id="cuenta" name="cuenta" type="text" inputmode="numeric" autocomplete="off" value="@Model.Cuenta" placeholder="Ej. 00200002" />
+            <span class="ayuda">Ocho dígitos.</span>
         </div>
-        <button type="submit" class="btn btn-primario">Consultar movimientos</button>
+        <div class="campo" style="flex:0 0 auto">
+            <button type="submit" class="btn btn-primario">Consultar movimientos</button>
+        </div>
     }
 </section>
 
@@ -20,12 +26,17 @@
 {
     <div class="error" role="alert">@Model.Error</div>
 }
+
 @if (Model.Consultado && string.IsNullOrEmpty(Model.Error))
 {
     <section class="panel">
+        <div class="cabecera-seccion">
+            <h2 style="margin:0">Cuenta @Model.Cuenta</h2>
+            <span class="texto-suave">@Model.Filas.Count movimiento(s), del más antiguo al más reciente</span>
+        </div>
         @if (Model.Filas.Count == 0)
         {
-            <div class="vacio">Sin resultados</div>
+            <div class="vacio">Esta cuenta todavía no tiene movimientos.</div>
         }
         else
         {
@@ -47,7 +58,7 @@
                                 <td>@fila.Numero</td>
                                 <td>@fila.Fecha</td>
                                 <td>@fila.Tipo</td>
-                                <td>@fila.Accion</td>
+                                <td><span class="etiqueta @(fila.Accion == "INGRESO" ? "ingreso" : "salida")">@(fila.Accion == "INGRESO" ? "Ingreso" : "Salida")</span></td>
                                 <td class="num">@fila.Importe</td>
                             </tr>
                         }
