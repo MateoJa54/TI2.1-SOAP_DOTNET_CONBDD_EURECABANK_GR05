@@ -70,7 +70,7 @@ try {
         if ($proceso.HasExited) { break }
         try { $arriba = (New-Object Net.WebClient).DownloadString("${url}?wsdl").Contains('WSEUREKABANK') } catch { Start-Sleep -Milliseconds 500 }
     }
-    if (-not $arriba) { throw 'El servicio no arranco. Revisa que MySQL y la compilacion esten bien.' }
+    if (-not $arriba) { throw 'El servicio no arranco. Revisa que SQL Server (MSSQLSERVER) y la compilacion esten bien.' }
 
     Write-Host ''
     Write-Host "Servidor en marcha (esquema '$Esquema')." -ForegroundColor Green

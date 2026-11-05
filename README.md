@@ -9,7 +9,6 @@ Caso de estudio de Arquitectura de Software (ESPE, docente Campaña, empresa fic
 | `01. UML` | Contrato congelado, ERS, ECUD y diagramas de PowerDesigner |
 | `02. MER` | Modelos conceptual, lógico y físico (idénticos a la versión Java) |
 | `03. BDD\SQLSERVER` | Scripts T-SQL de SQL Server: `cargar_bdd_sqlserver.ps1`, esquema, datos y procedimiento de carga de prueba |
-| `03. BDD\docker\init` | Scripts MySQL 8.4 de la versión Java (no se usan en .NET) |
 | `04. SERVIDOR` | `WSEUREKABANK` (WCF), `WSEUREKABANK.Pruebas` (MSTest), `contrato` (WSDL y XSD), `scripts` |
 | `04. CLICON` | Cliente de consola |
 | `04. CLIESC` | Cliente de escritorio WinForms |

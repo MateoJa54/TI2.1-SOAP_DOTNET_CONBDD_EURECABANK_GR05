@@ -9,7 +9,7 @@ namespace ec.edu.monster.datos
 {
     public class CuentaDAO : ICuentaDAO
     {
-        // En SQL Server el bloqueo de fila va como hint en la tabla: UPDLOCK + ROWLOCK equivale al FOR UPDATE de MySQL.
+        // El bloqueo de fila va como hint en la tabla: UPDLOCK + ROWLOCK bloquea la cuenta hasta el commit.
         private const string SelectBase =
             "SELECT c.chr_cuencodigo, c.chr_monecodigo, m.vch_monedescripcion, c.dec_cuensaldo, " +
             "c.vch_cuenestado, c.chr_cliecodigo, " +

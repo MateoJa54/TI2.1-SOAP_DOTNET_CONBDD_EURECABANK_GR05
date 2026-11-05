@@ -353,7 +353,7 @@ ec.edu.monster
 │   ├── CuentaDTO, MovimientoDTO
 │   └── CodigoRespuesta               ← los 17 códigos de §5
 ├── datos                             ← ADO.NET con System.Data.SqlClient, consultas parametrizadas
-│   ├── ProveedorConexion, IUnidadTrabajo / UnidadTrabajoMySql, ContextoTransaccional
+│   ├── ProveedorConexion, IUnidadTrabajo / UnidadTrabajoSql, ContextoTransaccional
 │   └── ClienteDAO, CuentaDAO, MovimientoDAO, UsuarioDAO, ParametroDAO,
 │       TipoMovimientoDAO, MonedaDAO, CostoDAO, LogSessionDAO (+ interfaces I*DAO)
 └── utilidades

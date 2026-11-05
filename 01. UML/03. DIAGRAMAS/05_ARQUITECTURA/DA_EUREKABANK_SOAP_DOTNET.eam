@@ -1072,7 +1072,7 @@ ConvTablePath=%_HOME%\Resource Files\Conversion Tables</a:ModelOptionsText>
 </o:ArchitectureArea>
 <o:ArchitectureArea Id="o12">
 <a:ObjectID>F41A103B-3B17-4A69-BB38-88E5ED6D2A7F</a:ObjectID>
-<a:Name>Datos - MySQL 8.4</a:Name>
+<a:Name>Datos - SQL Server</a:Name>
 <a:Code>Area_3</a:Code>
 <a:CreationDate>1793850263</a:CreationDate>
 <a:Creator>mateo</a:Creator>
@@ -2329,7 +2329,7 @@ Shadow=0</a:DisplayPreferences>
 <a:PaperSource>1</a:PaperSource>
 <c:Symbols>
 <o:TextSymbol Id="o13">
-<a:Text>Patrón Arquitectónico MVC - Servicios Web SOAP (WCF sobre IIS Express) con MySQL 8.4</a:Text>
+<a:Text>Patrón Arquitectónico MVC - Servicios Web SOAP (WCF sobre IIS Express) con SQL Server</a:Text>
 <a:Rect>((-22000,33500), (45000,37000))</a:Rect>
 <a:TextStyle>4130</a:TextStyle>
 <a:AutoAdjustToText>0</a:AutoAdjustToText>

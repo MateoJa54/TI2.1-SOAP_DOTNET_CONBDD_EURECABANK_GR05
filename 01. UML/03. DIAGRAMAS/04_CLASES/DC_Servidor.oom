@@ -22023,8 +22023,8 @@ Shadow=0</a:DisplayPreferences>
 </o:Class>
 <o:Class Id="o225">
 <a:ObjectID>6A5BCA60-B027-4F69-B9AA-CDFC47810985</a:ObjectID>
-<a:Name>UnidadTrabajoMySql</a:Name>
-<a:Code>UnidadTrabajoMySql</a:Code>
+<a:Name>UnidadTrabajoSql</a:Name>
+<a:Code>UnidadTrabajoSql</a:Code>
 <a:CreationDate>1793850036</a:CreationDate>
 <a:Creator>mateo</a:Creator>
 <a:ModificationDate>1793850036</a:ModificationDate>
@@ -22229,7 +22229,7 @@ Shadow=0</a:DisplayPreferences>
 <a:Creator>mateo</a:Creator>
 <a:ModificationDate>1793850036</a:ModificationDate>
 <a:Modifier>mateo</a:Modifier>
-<a:ReturnType>MySqlConnection</a:ReturnType>
+<a:ReturnType>SqlConnection</a:ReturnType>
 <a:TemplateBody>%DefaultBody%</a:TemplateBody>
 </o:Operation>
 <o:Operation Id="o642">

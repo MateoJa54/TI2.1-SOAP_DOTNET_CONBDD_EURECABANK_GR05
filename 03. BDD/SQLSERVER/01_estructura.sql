@@ -2,7 +2,6 @@
 -- 01_estructura.sql - EURECABANK / SQL Server
 -- Crea las 17 tablas del contrato en la base indicada por la variable esquema.
 -- Ejecutar con sqlcmd (lo hace cargar_bdd_sqlserver.ps1). Generado a partir de
--- 03. BDD\docker\init\01_estructura.sql (MySQL) y revisado a mano.
 -- =============================================================================
 USE [$(esquema)];
 GO

@@ -1,6 +1,6 @@
 ================================================================================
 02. MER - MODELO ENTIDAD-RELACION DE EURECABANK
-Proyecto: TI2.1 SOAP_JAVA_CONBDD_EURECABANK_GR03
+Proyecto: TI2.1 SOAP_DOTNET_CONBDD_EURECABANK_GR05
 ================================================================================
 
 1. QUE ES EL MER
@@ -11,13 +11,13 @@ su propio proyecto de PowerDesigner:
 
   01. CONCEPTUAL  -> MC_EUREKABANK.cdm   (CDM) - el modelo conceptual
   02. LOGICO      -> ML_EUREKABANK.ldm   (LDM) - el modelo logico
-  03. FISICO      -> MF_EUREKABANK.pdm   (PDM) - el modelo fisico
+  03. FISICO      -> MF_EUREKABANK.pdm   (PDM) - el modelo fisico, SQL Server
 
-La fuente de verdad de los datos es el DDL de la base de datos
-"03. BDD\docker\init\01_estructura.sql" (MySQL 8.4, esquema "eurekabank",
-17 tablas) y el CONTRATO CONGELADO (01. UML\00. CONTRATO). Ninguna tabla,
-columna, tipo o restriccion de este MER es inventada: el modelo fisico se
-comprueba tabla por tabla y columna por columna contra ese DDL.
+La fuente de verdad de los datos es el DDL de SQL Server
+"03. BDD\SQLSERVER\01_estructura.sql" (esquema "eurekabank", 17 tablas) y el
+CONTRATO CONGELADO (01. UML\00. CONTRATO). Ninguna tabla, columna, tipo o
+restriccion de este MER es inventada: el modelo fisico se comprueba tabla por
+tabla y columna por columna contra ese DDL.
 
 Los tres PNG se exportan a "05. DOCUMENTACION\img\" para incrustarlos en el
 ERS, el ECUD y el manual:
@@ -48,22 +48,18 @@ B) 02. MER\02. LOGICO\ML_EUREKABANK.ldm  (proyecto: 02_MODELO_LOGICO.prj)
    la clave foranea logica.
 
 C) 02. MER\03. FISICO\MF_EUREKABANK.pdm  (proyecto: 03_MODELO_FISICO.prj)
-   Modelo fisico (PDM) con destino MySQL. 17 tablas, 78 columnas, tipos
-   exactos de MySQL 8.4 (char(n), varchar(n), decimal(12,2), int, date,
-   datetime), obligatoriedad, valores por defecto, AUTO_INCREMENT, clave
-   primaria con su nombre, 16 claves foraneas con nombre de restriccion y sus
-   reglas ON DELETE/ON UPDATE RESTRICT, 15 indices (con U_Usuario_vch_emplusuario
-   unico) y los 8 CHECK de estado y de importe, mas los comentarios de tabla
-   y de columna del DDL.
+   Modelo fisico (PDM) con destino "Microsoft SQL Server 2012" (modulo
+   sqlsv2012.xdb de PowerDesigner 16.5). 17 tablas, tipos char(n), varchar(n),
+   decimal(12,2), int, date y datetime, obligatoriedad, valores por defecto,
+   clave primaria con su nombre, claves foraneas con nombre de restriccion y
+   reglas ON DELETE/ON UPDATE RESTRICT, indices (con U_Usuario_vch_emplusuario
+   unico) y los CHECK de estado y de importe, mas los comentarios de tabla y de
+   columna del DDL.
 
-   Nota sobre el destino: PowerDesigner 16.5 solo trae el modulo MySQL 5.0
-   (Resource Files\DBMS\mysql50.xdb). Los tipos usados (char, varchar,
-   decimal, int, date, datetime) tienen la misma sintaxis y el mismo
-   comportamiento en MySQL 8.4, por lo que el PDM es equivalente al DDL.
-
-   Regla de normalizacion documentada: en MySQL, "DEFAULT NULL" sobre una
-   columna nullable equivale a no declarar valor por defecto; el PDM no
-   declara ese default y el validador lo trata como equivalente.
+   El destino original era MySQL 5.0 y se cambio a SQL Server 2012 con
+   ChangeDBMS; PowerDesigner convirtio las columnas date a datetime y se
+   restauraron a date (columnas dtt_*) para coincidir con el DDL de SQL Server.
+   Respaldo previo al cambio: fuera del repositorio.
 
 
 3. COMO SE ABRE CADA UNO
@@ -71,9 +67,9 @@ C) 02. MER\03. FISICO\MF_EUREKABANK.pdm  (proyecto: 03_MODELO_FISICO.prj)
 Opcion A - Workspace (recomendado):
   1. Abrir PowerDesigner 16.5 (32 bits) desde
      "C:\Program Files (x86)\Sybase\PowerDesigner 16".
-  2. File > Open Workspace y elegir "SOAP_JAVA_CONBDD_GR03.sws" en la raiz
-     del proyecto. El workspace ya tiene registrados los tres .prj y los
-     tres modelos con rutas relativas.
+  2. File > Open Workspace y elegir "SOAP_DOTNET_CONBDD_GR05.sws" en la raiz
+     del proyecto. El workspace registra los tres .prj y los tres modelos con
+     rutas relativas.
 
 Opcion B - Proyecto suelto:
   File > Open y elegir cualquiera de estos archivos .prj:
@@ -88,38 +84,26 @@ Todos los .prj, el .sws y los modelos usan rutas RELATIVAS: el proyecto se
 puede mover de carpeta sin romper las referencias.
 
 
-4. COMO SE REGENERA
+4. COMO SE VERIFICA
 --------------------------------------------------------------------------------
-Los tres modelos se construyeron en PowerDesigner 16.5 (32 bits) y quedaron
-verificados contra el DDL de la BDD ("03. BDD\docker\init\01_estructura.sql"):
-
-  - El PDM (fisico) tiene 17 tablas con los tipos exactos de MySQL 8.4 del
-    DDL: PK, FK con nombre de restriccion, indices, CHECK de estado, valores
-    por defecto y comentarios.
+  - El PDM (fisico) tiene las 17 tablas del DDL de SQL Server, con PK, FK,
+    indices, CHECK, valores por defecto y comentarios.
   - El LDM (logico) tiene las mismas 17 entidades con atributos de tipo logico,
     PK, FK y cardinalidades.
   - El CDM (conceptual) tiene las entidades de negocio y sus relaciones.
 
 Si se modifica el DDL hay que actualizar el PDM a mano en PowerDesigner y
-volver a comprobar que coincide con "03. BDD\docker\init\01_estructura.sql".
+volver a comprobar que coincide con "03. BDD\SQLSERVER\01_estructura.sql".
+
 
 5. FICHEROS DE ESTA CARPETA
 --------------------------------------------------------------------------------
   README.txt                       este fichero
-  01. CONCEPTUAL\                 modelo conceptual (CDM) + su proyecto .prj
-  02. LOGICO\                     modelo logico (LDM) + su proyecto .prj
-  03. FISICO\                     modelo fisico (PDM) + su proyecto .prj
+  01. CONCEPTUAL\                  modelo conceptual (CDM) + su proyecto .prj
+  02. LOGICO\                      modelo logico (LDM) + su proyecto .prj
+  03. FISICO\                      modelo fisico (PDM) + su proyecto .prj
 
-  Los PNG de los tres modelos estan en "05. DOCUMENTACION\img\" y se
-  referencian desde el ERS, el ECUD y el manual tecnico.
-5. FICHEROS DE ESTA CARPETA
---------------------------------------------------------------------------------
-  README.txt                       este fichero
-  01. CONCEPTUAL\                 modelo conceptual (CDM) + su proyecto .prj
-  02. LOGICO\                     modelo logico (LDM) + su proyecto .prj
-  03. FISICO\                     modelo fisico (PDM) + su proyecto .prj
-
-Los tres modelos estan registrados en el workspace "SOAP_JAVA_CONBDD_GR03.sws"
-con rutas relativas, y sus imagenes van incrustadas en el ERS, el ECUD y el
-manual tecnico.
+Los modelos estan registrados en el workspace "SOAP_DOTNET_CONBDD_GR05.sws"
+(raiz del proyecto) con rutas relativas, y sus imagenes van incrustadas en el
+ERS, el ECUD y el manual tecnico.
 ================================================================================

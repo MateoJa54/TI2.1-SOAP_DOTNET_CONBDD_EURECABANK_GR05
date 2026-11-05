@@ -1366,7 +1366,7 @@ Shadow=0</a:DisplayPreferences>
   ACT-001 Cliente Bancario - persona con cuenta en EURECABANK; opera por el ATM o la ventanilla.
   ACT-002 Cliente de Software Consola (04. CLICON)     ACT-003 Cliente de Software Escritorio (04. CLIESC)
   ACT-004 Cliente de Software Web (04. CLIWEB)          ACT-005 Cliente de Software Móvil (04. CLIMOV)
-  ACT-006 Base de Datos EUREKABANK - MySQL 8.4, esquema eurekabank, 17 tablas.
+  ACT-006 Base de Datos EUREKABANK - SQL Server, esquema eurekabank, 17 tablas.
   ACT-007 Proceso Batch de Mantenimiento - cobra el mantenimiento y abona el interés (fuera de alcance, RB-12).
 
 Casos de uso (contrato, sección 8)

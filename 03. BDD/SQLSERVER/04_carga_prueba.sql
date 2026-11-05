@@ -2,7 +2,6 @@
 -- 04_carga_prueba.sql - EURECABANK / SQL Server
 -- Procedimiento sp_cargar_datos_prueba: restaura la semilla de 6 cuentas y 74 movimientos.
 -- Ejecutar a mano:  EXEC sp_cargar_datos_prueba;
--- Generado desde 03. BDD\docker\init_carga_prueba.sql (MySQL).
 -- =============================================================================
 USE [$(esquema)];
 GO

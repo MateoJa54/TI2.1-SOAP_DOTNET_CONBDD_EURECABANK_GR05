@@ -1,7 +1,6 @@
 -- =============================================================================
 -- 02_datos.sql - EURECABANK / SQL Server
 -- Carga los maestros y la semilla inicial. Requiere tablas vacias (las crea 01_estructura.sql).
--- Generado desde 03. BDD\docker\init_datos.sql (MySQL).
 -- =============================================================================
 USE [$(esquema)];
 GO
