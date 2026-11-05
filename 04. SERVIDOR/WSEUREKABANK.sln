@@ -1,0 +1,24 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSEUREKABANK", "WSEUREKABANK\WSEUREKABANK.csproj", "{6B3B1C52-5C0D-4F77-9D7E-3C9A0E5A1001}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WSEUREKABANK.Pruebas", "WSEUREKABANK.Pruebas\WSEUREKABANK.Pruebas.csproj", "{47260AFC-AB6E-561B-88AC-A43D0A61770B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B3B1C52-5C0D-4F77-9D7E-3C9A0E5A1001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B3B1C52-5C0D-4F77-9D7E-3C9A0E5A1001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B3B1C52-5C0D-4F77-9D7E-3C9A0E5A1001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B3B1C52-5C0D-4F77-9D7E-3C9A0E5A1001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47260AFC-AB6E-561B-88AC-A43D0A61770B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47260AFC-AB6E-561B-88AC-A43D0A61770B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47260AFC-AB6E-561B-88AC-A43D0A61770B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47260AFC-AB6E-561B-88AC-A43D0A61770B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
