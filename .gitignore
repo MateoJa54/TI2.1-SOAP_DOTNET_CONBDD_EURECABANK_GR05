@@ -1,0 +1,26 @@
+# Respaldos de PowerDesigner (se regeneran al guardar)
+*.oob
+*.pjb
+*.eab
+*.cdb
+*.ldb
+*.pdb
+*.bak
+
+# .NET / Visual Studio
+.vs/
+[Bb]in/
+[Oo]bj/
+packages/
+TestResults/
+*.user
+*.suo
+
+# Registros y temporales
+*.log
+~$*
+.~lock.*#
+
+# Pizarra local del equipo de agentes
+.estacion/
+.claude/

@@ -1,0 +1,14 @@
+* text=auto
+
+*.oom -text
+*.eam -text
+*.prj -text
+*.sws -text
+*.cdm -text
+*.ldm -text
+*.pdm -text
+
+*.ps1 text eol=crlf
+*.png binary
+*.docx binary
+*.pptx binary
