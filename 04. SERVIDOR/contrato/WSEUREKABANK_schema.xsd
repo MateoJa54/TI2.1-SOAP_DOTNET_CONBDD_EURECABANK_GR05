@@ -1,0 +1,804 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  EURECABANK - Contrato del servicio web SOAP (esquema XML / XSD)
+  =================================================================
+  Servicio      : WSEUREKABANK
+  Estilo SOAP   : SOAP 1.1 - document / literal / wrapped
+  Namespace     : http://ws.monster.edu.ec/
+  Version       : 1.0
+  Fecha         : 2026-11-03
+  Autores       : Grupo GR05 - EURECABANK (responsable del contrato: Mateo Iza)
+  Fuente        : 01. UML/00. CONTRATO/CONTRATO_CONGELADO_EUREKABANK.md
+  =================================================================
+  CONTRATO CONGELADO: este esquema no se modifica sin actualizar, en el
+  mismo dia, el ERS, el ECUD, los diagramas PowerDesigner y el codigo del
+  servidor y del cliente. Todo elemento y todo tipo de aqui coincide con el
+  contrato congelado: 9 operaciones, 11 tipos de respuesta/entidad y 17
+  codigos de resultado con su mensaje literal.
+  =================================================================
+  Convencion del estilo wrapped que usa JAX-WS:
+    - Elemento de entrada  <op>          -> tipo tns:<op>Tipo
+    - Elemento de salida  <op>Response  -> tipo tns:<op>ResponseTipo
+    - El contenedor de respuesta tiene un unico elemento "return" con el
+      tipo de respuesta del contrato. Asi el mensaje SOAP lleva el sobre
+      completo y Metro no confunde un parametro de entrada con un dato del
+      sobre cuando ambos se llaman igual (por ejemplo "cuenta").
+--><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.monster.edu.ec/" targetNamespace="http://ws.monster.edu.ec/" elementFormDefault="unqualified" version="1.0">
+
+  <!-- ================================================================== -->
+  <!-- ELEMENTOS DE LAS 9 OPERACIONES (estilo document/literal wrapped)    -->
+  <!-- Cada operacion declara un elemento contenedor de entrada y otro de  -->
+  <!-- salida; el nombre del de salida es el del de entrada mas          -->
+  <!-- "Response", como exige la convencion de JAX-WS.                     -->
+  <!-- ================================================================== -->
+
+  <xs:element name="autenticar" type="tns:autenticar">
+    <xs:annotation>
+      <xs:documentation>Operacion 1 (CU-01): autentica al empleado y devuelve el token de sesion.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="autenticarResponse" type="tns:autenticarResponse">
+    <xs:annotation>
+      <xs:documentation>Respuesta de la operacion autenticar: estado, codigo, mensaje y datos de la sesion iniciada.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="cerrarSesion" type="tns:cerrarSesion">
+    <xs:annotation>
+      <xs:documentation>Operacion 2 (CU-01): cierra la sesion abierta con el token recibido.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="cerrarSesionResponse" type="tns:cerrarSesionResponse">
+    <xs:annotation>
+      <xs:documentation>Respuesta de la operacion cerrarSesion: estado, codigo y mensaje.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="listarCuentasPorCliente" type="tns:listarCuentasPorCliente">
+    <xs:annotation>
+      <xs:documentation>Operacion 3 (CU-03): lista las cuentas del cliente con la cedula indicada.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="listarCuentasPorClienteResponse" type="tns:listarCuentasPorClienteResponse">
+    <xs:annotation>
+      <xs:documentation>Respuesta de la operacion listarCuentasPorCliente: datos del cliente y sus cuentas.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="consultarCuenta" type="tns:consultarCuenta">
+    <xs:annotation>
+      <xs:documentation>Operacion 4 (CU-03): consulta una cuenta por su codigo.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="consultarCuentaResponse" type="tns:consultarCuentaResponse">
+    <xs:annotation>
+      <xs:documentation>Respuesta de la operacion consultarCuenta: datos completos de la cuenta.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="consultarMovimientos" type="tns:consultarMovimientos">
+    <xs:annotation>
+      <xs:documentation>Operacion 5 (CU-04): consulta los movimientos de una cuenta.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="consultarMovimientosResponse" type="tns:consultarMovimientosResponse">
+    <xs:annotation>
+      <xs:documentation>Respuesta de la operacion consultarMovimientos: cuenta y lista de movimientos.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="realizarDeposito" type="tns:realizarDeposito">
+    <xs:annotation>
+      <xs:documentation>Operacion 6 (CU-05): realiza un deposito en la cuenta indicada.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="realizarDepositoResponse" type="tns:realizarDepositoResponse">
+    <xs:annotation>
+      <xs:documentation>Respuesta de la operacion realizarDeposito: movimiento, saldo nuevo, costo e ITF aplicados.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="realizarRetiro" type="tns:realizarRetiro">
+    <xs:annotation>
+      <xs:documentation>Operacion 7 (CU-06): realiza un retiro de la cuenta indicada.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="realizarRetiroResponse" type="tns:realizarRetiroResponse">
+    <xs:annotation>
+      <xs:documentation>Respuesta de la operacion realizarRetiro: movimiento, saldo nuevo, costo e ITF aplicados.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="realizarTransferencia" type="tns:realizarTransferencia">
+    <xs:annotation>
+      <xs:documentation>Operacion 8 (CU-07): transfiere un monto entre dos cuentas del banco.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="realizarTransferenciaResponse" type="tns:realizarTransferenciaResponse">
+    <xs:annotation>
+      <xs:documentation>Respuesta de la operacion realizarTransferencia: numeros, saldos e ITF de la transferencia.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="consultarCostosMantenimiento" type="tns:consultarCostosMantenimiento">
+    <xs:annotation>
+      <xs:documentation>Operacion 9 (CU-08): proyecta los costos de mantenimiento y el interes de una cuenta.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="consultarCostosMantenimientoResponse" type="tns:consultarCostosMantenimientoResponse">
+    <xs:annotation>
+      <xs:documentation>Respuesta de la operacion consultarCostosMantenimiento: saldos, costos, interes proyectado y limite.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <!-- ================================================================== -->
+  <!-- TIPOS DE RESPUESTA: sobre comun y sus 7 extensiones                 -->
+  <!-- ================================================================== -->
+
+  <xs:complexType name="respuestaBase">
+    <xs:annotation>
+      <xs:documentation>Sobre comun de toda respuesta del servicio: estado, codigo y mensaje, en ese orden.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="codigo" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo de resultado del catalogo congelado: 200, DAT-001, AUTH-001, AUTH-002, AUTH-003, AUTH-004, CTA-001, CTA-002, CTA-003, CTA-004, CLI-001, SAL-001, MON-001, MON-002, LIM-001, SER-001, ERR-001.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="estado" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Resultado de la operacion: OK o ERROR; se llena siempre, incluso en error.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mensaje" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Mensaje literal en espanol segun el catalogo de codigos; se llena siempre, incluso en error.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="respuestaAutenticacion">
+    <xs:annotation>
+      <xs:documentation>Respuesta de autenticar: extiende RespuestaBaseTipo con los datos de la sesion iniciada.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:respuestaBase">
+        <xs:sequence>
+          <xs:element name="empleado" type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Codigo del empleado autenticado.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="expiracion" type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Fecha y hora de expiracion del token de sesion, con 30 minutos de vigencia.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="nombreEmpleado" type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Nombre completo del empleado autenticado.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="rol" type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Rol o modulo de acceso del empleado autenticado.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        <xs:element name="token" type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Token de sesion entregado al cliente para las operaciones autenticadas.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="respuestaCuentas">
+    <xs:annotation>
+      <xs:documentation>Respuesta de listarCuentasPorCliente: extiende RespuestaBaseTipo con los datos del cliente y sus cuentas.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:respuestaBase">
+        <xs:sequence>
+          <xs:element name="cedula" type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Cedula del cliente consultado.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="cuentas" type="tns:cuentaDTO" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Lista de cuentas del cliente con su estado visible; vacia en caso de error.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        <xs:element name="nombreCliente" type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Nombre completo del cliente consultado.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="respuestaCuenta">
+    <xs:annotation>
+      <xs:documentation>Respuesta de consultarCuenta: extiende RespuestaBaseTipo con los datos de una cuenta.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:respuestaBase">
+        <xs:sequence>
+          <xs:element name="cuenta" type="tns:cuentaDTO" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Datos de la cuenta consultada; con valores por defecto en caso de error.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="respuestaMovimientos">
+    <xs:annotation>
+      <xs:documentation>Respuesta de consultarMovimientos: extiende RespuestaBaseTipo con el libro de movimientos de una cuenta.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:respuestaBase">
+        <xs:sequence>
+          <xs:element name="cuenta" type="xs:string" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Codigo de la cuenta cuyos movimientos se consultan.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="movimientos" type="tns:movimientoDTO" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Lista de movimientos de la cuenta; vacia en caso de error.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="respuestaMovimiento">
+    <xs:annotation>
+      <xs:documentation>Respuesta de realizarDeposito y realizarRetiro: extiende RespuestaBaseTipo con el efecto de la operacion.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:respuestaBase">
+        <xs:sequence>
+          <xs:element name="costoAplicado" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Costo por movimiento aplicado; vale 0 en caso de error o si el movimiento es sin costo.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="itfAplicado" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Impuesto a las transacciones aplicado; vale 0 en caso de error o si no aplica.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        <xs:element name="movimiento" type="tns:movimientoDTO" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Movimiento registrado por la operacion; con valores por defecto en caso de error.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="saldoNuevo" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Saldo de la cuenta despues de la operacion; vale 0 en caso de error.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="respuestaTransferencia">
+    <xs:annotation>
+      <xs:documentation>Respuesta de realizarTransferencia: extiende RespuestaBaseTipo con el detalle de la transferencia.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:respuestaBase">
+        <xs:sequence>
+          <xs:element name="itfAplicado" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Impuesto a las transacciones descontado en la cuenta origen; vale 0 en caso de error.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        <xs:element name="numeroDestino" type="xs:int" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Numero del movimiento de ingreso en la cuenta destino; vale 0 en caso de error.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="numeroOrigen" type="xs:int" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Numero del movimiento de salida en la cuenta origen; vale 0 en caso de error.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="saldoDestino" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Saldo de la cuenta destino despues de la transferencia; vale 0 en caso de error.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="saldoOrigen" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Saldo de la cuenta origen despues de la transferencia; vale 0 en caso de error.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="respuestaCostos">
+    <xs:annotation>
+      <xs:documentation>Respuesta de consultarCostosMantenimiento: extiende RespuestaBaseTipo con la proyeccion de costos.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:respuestaBase">
+        <xs:sequence>
+          <xs:element name="costoMantenimiento" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Costo de mantenimiento proyectado para la cuenta; vale 0 si no aplica.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="costoMovimiento" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Costo por movimiento vigente en la moneda de la cuenta; vale 0 si no aplica.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="interesProyectado" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Interes mensual proyectado sobre el saldo actual; vale 0 si no aplica.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="limiteMantenimiento" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Saldo maximo que no supera el umbral de cobro de mantenimiento; vale 0 si no aplica.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="operacionesSinCosto" type="xs:int" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Numero de operaciones sin costo permitido en la cuenta; vale 0 si no aplica.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        <xs:element name="saldoActual" type="xs:decimal" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Saldo actual de la cuenta consultada; vale 0 en caso de error.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- ================================================================== -->
+  <!-- TIPOS DE ENTIDAD: datos de cuenta y de movimiento                  -->
+  <!-- ================================================================== -->
+
+  <xs:complexType name="cuentaDTO">
+    <xs:annotation>
+      <xs:documentation>Datos de una cuenta del banco que viajan dentro de las respuestas.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="clave" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Clave de identificacion de la cuenta usada por el cajero del banco.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="codigo" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo de la cuenta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="codigoCliente" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo del cliente titular de la cuenta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="codigoSucursal" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo de la sucursal que administra la cuenta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="descripcionMoneda" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nombre oficial de la moneda de la cuenta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="estado" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Estado de la cuenta: ACTIVO, ANULADO o CANCELADO.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="fechaCreacion" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Fecha en que se abrio la cuenta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="moneda" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo de la moneda de la cuenta, por ejemplo 01 o 02.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="nombreCliente" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nombre completo del cliente titular de la cuenta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="operacionesRealizadas" type="xs:int" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Cantidad de movimientos registrados en la cuenta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    <xs:element name="saldo" type="xs:decimal" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Saldo disponible de la cuenta con dos decimales.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="movimientoDTO">
+    <xs:annotation>
+      <xs:documentation>Datos de un movimiento del libro de la cuenta que viajan dentro de las respuestas.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="empleado" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo del empleado que registro el movimiento.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    <xs:element name="fecha" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Fecha en que se registro el movimiento.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="importe" type="xs:decimal" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Importe del movimiento con dos decimales.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="numero" type="xs:int" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numero correlativo del movimiento dentro de la cuenta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="referencia" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Cuenta referida en una transferencia; vacia en el resto de movimientos.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="tipoAccion" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Accion del tipo de movimiento: INGRESO o SALIDA.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="tipoCodigo" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo del tipo de movimiento, por ejemplo 003 o 004.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="tipoDescripcion" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Descripcion oficial del tipo de movimiento.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      </xs:sequence>
+  </xs:complexType>
+
+  <!-- ================================================================== -->
+  <!-- TIPOS DE ENTRADA: un tipo por operacion, el token va al ultimo      -->
+  <!-- ================================================================== -->
+
+  <xs:complexType name="autenticar">
+    <xs:annotation>
+      <xs:documentation>Parametros de entrada de la operacion autenticar.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="usuario" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Usuario del empleado que inicia sesion.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="clave" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Clave del empleado que inicia sesion.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cerrarSesion">
+    <xs:annotation>
+      <xs:documentation>Parametros de entrada de la operacion cerrarSesion.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="token" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Token de sesion que se cierra.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="listarCuentasPorCliente">
+    <xs:annotation>
+      <xs:documentation>Parametros de entrada de la operacion listarCuentasPorCliente.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="cedula" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Cedula del cliente cuyas cuentas se listan.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="token" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Token de sesion del empleado que realiza la consulta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="consultarCuenta">
+    <xs:annotation>
+      <xs:documentation>Parametros de entrada de la operacion consultarCuenta.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="cuenta" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo de la cuenta que se consulta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="token" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Token de sesion del empleado que realiza la consulta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="consultarMovimientos">
+    <xs:annotation>
+      <xs:documentation>Parametros de entrada de la operacion consultarMovimientos.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="cuenta" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo de la cuenta cuyos movimientos se consultan.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="token" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Token de sesion del empleado que realiza la consulta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="realizarDeposito">
+    <xs:annotation>
+      <xs:documentation>Parametros de entrada de la operacion realizarDeposito.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="cuenta" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo de la cuenta que recibe el deposito.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="monto" type="xs:decimal" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Monto del deposito, mayor que cero y con maximo dos decimales.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="token" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Token de sesion del empleado que realiza la operacion.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="realizarRetiro">
+    <xs:annotation>
+      <xs:documentation>Parametros de entrada de la operacion realizarRetiro.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="cuenta" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo de la cuenta de la que se retira el monto.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="monto" type="xs:decimal" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Monto del retiro, mayor que cero y con maximo dos decimales.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="token" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Token de sesion del empleado que realiza la operacion.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="realizarTransferencia">
+    <xs:annotation>
+      <xs:documentation>Parametros de entrada de la operacion realizarTransferencia.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="cuentaOrigen" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo de la cuenta de la que sale el monto.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="cuentaDestino" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo de la cuenta que recibe el monto; no puede igual a la cuenta origen.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="monto" type="xs:decimal" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Monto de la transferencia, mayor que cero y con maximo dos decimales.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="token" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Token de sesion del empleado que realiza la operacion.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="consultarCostosMantenimiento">
+    <xs:annotation>
+      <xs:documentation>Parametros de entrada de la operacion consultarCostosMantenimiento.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="cuenta" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo de la cuenta cuyos costos se consultan.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="token" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Token de sesion del empleado que realiza la consulta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ================================================================== -->
+  <!-- CONTENEDORES DE RESPUESTA: uno por operacion                       -->
+  <!-- Cada contenedor tiene un unico elemento "return" con el tipo de     -->
+  <!-- respuesta del contrato; es la forma que exige JAX-WS para el      -->
+  <!-- estilo document/literal wrapped.                                    -->
+  <!-- ================================================================== -->
+
+  <xs:complexType name="autenticarResponse">
+    <xs:annotation>
+      <xs:documentation>Contenedor de la respuesta de la operacion autenticar.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="return" type="tns:respuestaAutenticacion" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sobre de respuesta con el estado, el codigo, el mensaje y los datos de la sesion iniciada.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cerrarSesionResponse">
+    <xs:annotation>
+      <xs:documentation>Contenedor de la respuesta de la operacion cerrarSesion.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="return" type="tns:respuestaBase" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sobre de respuesta con el estado, el codigo y el mensaje del cierre de sesion.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="listarCuentasPorClienteResponse">
+    <xs:annotation>
+      <xs:documentation>Contenedor de la respuesta de la operacion listarCuentasPorCliente.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="return" type="tns:respuestaCuentas" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sobre de respuesta con el estado, el codigo, el mensaje y la lista de cuentas del cliente.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="consultarCuentaResponse">
+    <xs:annotation>
+      <xs:documentation>Contenedor de la respuesta de la operacion consultarCuenta.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="return" type="tns:respuestaCuenta" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sobre de respuesta con el estado, el codigo, el mensaje y los datos de la cuenta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="consultarMovimientosResponse">
+    <xs:annotation>
+      <xs:documentation>Contenedor de la respuesta de la operacion consultarMovimientos.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="return" type="tns:respuestaMovimientos" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sobre de respuesta con el estado, el codigo, el mensaje y los movimientos de la cuenta.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="realizarDepositoResponse">
+    <xs:annotation>
+      <xs:documentation>Contenedor de la respuesta de la operacion realizarDeposito.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="return" type="tns:respuestaMovimiento" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sobre de respuesta con el estado, el codigo, el mensaje y el efecto del deposito.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="realizarRetiroResponse">
+    <xs:annotation>
+      <xs:documentation>Contenedor de la respuesta de la operacion realizarRetiro.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="return" type="tns:respuestaMovimiento" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sobre de respuesta con el estado, el codigo, el mensaje y el efecto del retiro.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="realizarTransferenciaResponse">
+    <xs:annotation>
+      <xs:documentation>Contenedor de la respuesta de la operacion realizarTransferencia.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="return" type="tns:respuestaTransferencia" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sobre de respuesta con el estado, el codigo, el mensaje y el detalle de la transferencia.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="consultarCostosMantenimientoResponse">
+    <xs:annotation>
+      <xs:documentation>Contenedor de la respuesta de la operacion consultarCostosMantenimiento.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="return" type="tns:respuestaCostos" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sobre de respuesta con el estado, el codigo, el mensaje y la proyeccion de costos.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

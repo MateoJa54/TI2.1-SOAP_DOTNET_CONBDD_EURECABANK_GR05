@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  EURECABANK - Contrato del servicio web SOAP (WSDL 1.1)
+  =====================================================
+  Servicio      : WSEUREKABANK
+  Estilo SOAP   : SOAP 1.1 - document / literal / wrapped
+  Namespace     : http://ws.monster.edu.ec/
+  Binding       : WSEUREKABANKPortBinding
+  Puerto        : WSEUREKABANKPort
+  Endpoint      : http://localhost:50775/WSEUREKABANK.svc
+  Version       : 1.0
+  Fecha         : 2026-11-03
+  Autores       : Grupo GR05 - EURECABANK (responsable del contrato: Mateo Iza)
+  Fuente        : 01. UML/00. CONTRATO/CONTRATO_CONGELADO_EUREKABANK.md
+  =================================================================
+  CONTRATO CONGELADO: este WSDL no se modifica sin actualizar, en el mismo
+  dia, el ERS, el ECUD, los diagramas PowerDesigner y el codigo del servidor
+  y del cliente. Las 9 operaciones, los tipos de respuesta/entidad y el
+  orden de los atributos del sobre coinciden con el contrato congelado.
+-->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:tns="http://ws.monster.edu.ec/"
+             targetNamespace="http://ws.monster.edu.ec/"
+             name="WSEUREKABANK">
+
+  <!-- ================================================================== -->
+  <!-- TIPOS: importan el esquema XML que vive en WSEUREKABANK_schema.xsd. -->
+  <!-- El esquema usa el mismo targetNamespace, asi que el enlace es     -->
+  <!-- local y el cliente compila con el servidor apagado.                -->
+  <!-- ================================================================== -->
+  <types>
+    <xsd:schema>
+      <xsd:import namespace="http://ws.monster.edu.ec/" schemaLocation="WSEUREKABANK_schema.xsd"/>
+    </xsd:schema>
+  </types>
+
+  <!-- ================================================================== -->
+  <!-- MENSAJES: dos por operacion, el de entrada y el de salida.         -->
+  <!-- En el estilo wrapped el nombre de la parte es "parameters" y      -->
+  <!-- apunta al elemento contenedor de la operacion.                    -->
+  <!-- ================================================================== -->
+  <message name="autenticar">
+    <part name="parameters" element="tns:autenticar"/>
+  </message>
+  <message name="autenticarResponse">
+    <part name="parameters" element="tns:autenticarResponse"/>
+  </message>
+  <message name="cerrarSesion">
+    <part name="parameters" element="tns:cerrarSesion"/>
+  </message>
+  <message name="cerrarSesionResponse">
+    <part name="parameters" element="tns:cerrarSesionResponse"/>
+  </message>
+  <message name="listarCuentasPorCliente">
+    <part name="parameters" element="tns:listarCuentasPorCliente"/>
+  </message>
+  <message name="listarCuentasPorClienteResponse">
+    <part name="parameters" element="tns:listarCuentasPorClienteResponse"/>
+  </message>
+  <message name="consultarCuenta">
+    <part name="parameters" element="tns:consultarCuenta"/>
+  </message>
+  <message name="consultarCuentaResponse">
+    <part name="parameters" element="tns:consultarCuentaResponse"/>
+  </message>
+  <message name="consultarMovimientos">
+    <part name="parameters" element="tns:consultarMovimientos"/>
+  </message>
+  <message name="consultarMovimientosResponse">
+    <part name="parameters" element="tns:consultarMovimientosResponse"/>
+  </message>
+  <message name="realizarDeposito">
+    <part name="parameters" element="tns:realizarDeposito"/>
+  </message>
+  <message name="realizarDepositoResponse">
+    <part name="parameters" element="tns:realizarDepositoResponse"/>
+  </message>
+  <message name="realizarRetiro">
+    <part name="parameters" element="tns:realizarRetiro"/>
+  </message>
+  <message name="realizarRetiroResponse">
+    <part name="parameters" element="tns:realizarRetiroResponse"/>
+  </message>
+  <message name="realizarTransferencia">
+    <part name="parameters" element="tns:realizarTransferencia"/>
+  </message>
+  <message name="realizarTransferenciaResponse">
+    <part name="parameters" element="tns:realizarTransferenciaResponse"/>
+  </message>
+  <message name="consultarCostosMantenimiento">
+    <part name="parameters" element="tns:consultarCostosMantenimiento"/>
+  </message>
+  <message name="consultarCostosMantenimientoResponse">
+    <part name="parameters" element="tns:consultarCostosMantenimientoResponse"/>
+  </message>
+
+  <!-- ================================================================== -->
+  <!-- PORT TYPE: las 9 operaciones congeladas con sus acciones SOAP.     -->
+  <!-- ================================================================== -->
+  <portType name="WSEUREKABANK">
+    <operation name="autenticar">
+      <input wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/autenticarRequest" message="tns:autenticar"/>
+      <output wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/autenticarResponse" message="tns:autenticarResponse"/>
+    </operation>
+    <operation name="cerrarSesion">
+      <input wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/cerrarSesionRequest" message="tns:cerrarSesion"/>
+      <output wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/cerrarSesionResponse" message="tns:cerrarSesionResponse"/>
+    </operation>
+    <operation name="listarCuentasPorCliente">
+      <input wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/listarCuentasPorClienteRequest" message="tns:listarCuentasPorCliente"/>
+      <output wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/listarCuentasPorClienteResponse" message="tns:listarCuentasPorClienteResponse"/>
+    </operation>
+    <operation name="consultarCuenta">
+      <input wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/consultarCuentaRequest" message="tns:consultarCuenta"/>
+      <output wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/consultarCuentaResponse" message="tns:consultarCuentaResponse"/>
+    </operation>
+    <operation name="consultarMovimientos">
+      <input wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/consultarMovimientosRequest" message="tns:consultarMovimientos"/>
+      <output wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/consultarMovimientosResponse" message="tns:consultarMovimientosResponse"/>
+    </operation>
+    <operation name="realizarDeposito">
+      <input wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/realizarDepositoRequest" message="tns:realizarDeposito"/>
+      <output wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/realizarDepositoResponse" message="tns:realizarDepositoResponse"/>
+    </operation>
+    <operation name="realizarRetiro">
+      <input wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/realizarRetiroRequest" message="tns:realizarRetiro"/>
+      <output wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/realizarRetiroResponse" message="tns:realizarRetiroResponse"/>
+    </operation>
+    <operation name="realizarTransferencia">
+      <input wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/realizarTransferenciaRequest" message="tns:realizarTransferencia"/>
+      <output wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/realizarTransferenciaResponse" message="tns:realizarTransferenciaResponse"/>
+    </operation>
+    <operation name="consultarCostosMantenimiento">
+      <input wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/consultarCostosMantenimientoRequest" message="tns:consultarCostosMantenimiento"/>
+      <output wsam:Action="http://ws.monster.edu.ec/WSEUREKABANK/consultarCostosMantenimientoResponse" message="tns:consultarCostosMantenimientoResponse"/>
+    </operation>
+  </portType>
+
+  <!-- ================================================================== -->
+  <!-- BINDING: document / literal wrapped sobre HTTP.                    -->
+  <!-- El estilo wrapped se marca con style="document" y con una sola    -->
+  <!-- parte llamada "parameters" que apunta al elemento contenedor.      -->
+  <!-- El contenedor de respuesta lleva un unico elemento "return" con   -->
+  <!-- el sobre del contrato; es la forma que exige JAX-WS y que usa     -->
+  <!-- tambien el WSDL del proyecto TI.1.1 del docente.                   -->
+  <!-- ================================================================== -->
+  <binding name="WSEUREKABANKPortBinding" type="tns:WSEUREKABANK">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="autenticar">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="cerrarSesion">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="listarCuentasPorCliente">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="consultarCuenta">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="consultarMovimientos">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="realizarDeposito">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="realizarRetiro">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="realizarTransferencia">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="consultarCostosMantenimiento">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <!-- ================================================================== -->
+  <!-- SERVICIO: direccion local de prueba del servicio publicado.        -->
+  <!-- ================================================================== -->
+  <service name="WSEUREKABANK">
+    <port name="WSEUREKABANKPort" binding="tns:WSEUREKABANKPortBinding">
+      <soap:address location="http://localhost:50775/WSEUREKABANK.svc"/>
+    </port>
+  </service>
+</definitions>
